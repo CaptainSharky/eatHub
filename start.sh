@@ -4,8 +4,7 @@ readonly PROJECT_FILE="EatHub.xcodeproj"
 
 showHelp() {
   cat << EOF  
-  Usage: ./bootstrap
-
+  
   *Without params*    Build Project
 
   -h, -help, --help   Display help
