@@ -62,6 +62,7 @@ else
 
         --full)
             kill $(ps aux | grep 'Xcode')
+            installBrew
             installXcodeGen
             runXcodeGen
             open "$PROJECT_FILE"
