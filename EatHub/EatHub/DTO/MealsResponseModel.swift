@@ -6,5 +6,5 @@
 //
 
 struct MealsResponseModel: Decodable {
-    let meals: [MealItemResponseModel]?
+    let meals: [MealItemResponseModel]
 }

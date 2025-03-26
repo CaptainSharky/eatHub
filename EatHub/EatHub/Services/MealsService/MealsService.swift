@@ -40,7 +40,7 @@ extension MealsService: MealsServiceInterface {
     func fetchRandomMeal() -> AnyPublisher<Meal, Error> {
         requester.randomMeal()
             .tryMap { response in
-                guard let firstMeal = response.meals?.first else {
+                guard let firstMeal = response.meals.first else {
                     throw NSError(domain: "MappingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No meal found"])
                 }
                 return firstMeal.mapToMeal()

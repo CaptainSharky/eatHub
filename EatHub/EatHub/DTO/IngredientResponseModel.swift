@@ -6,6 +6,6 @@
 //
 
 struct IngredientResponseModel: Decodable {
-    let name: String?
+    let name: String
     let measure: String?
 }

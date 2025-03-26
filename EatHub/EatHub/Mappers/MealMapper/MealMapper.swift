@@ -7,7 +7,6 @@
 
 extension MealsResponseModel {
     func mapToMealList() -> [Meal] {
-        guard let meals = self.meals else { return [] }
         return meals.compactMap { $0.mapToMeal() }
     }
 }

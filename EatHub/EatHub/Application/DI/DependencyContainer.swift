@@ -7,7 +7,6 @@
 
 
 final class DependencyContainer {
-    static let shared = DependencyContainer()
 
     private lazy var apiRequester: Requestable = APIRequester()
 
