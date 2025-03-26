@@ -44,7 +44,7 @@ targets:
       MARKETING_VERSION: "1.0"
 
       # Указание на ассеты (одна папка)
-      DEVELOPMENT_ASSET_PATHS: "EatHub/Design/Resources"
+      DEVELOPMENT_ASSET_PATHS: "EatHub/EatHub/Design/Resources"
 
       ENABLE_PREVIEWS: YES
 
