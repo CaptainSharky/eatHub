@@ -2,8 +2,8 @@ name: iOS CI
 
 on:
   push:
-    branches:
-      - 'feature/**'
+    branches-ignore:
+      - develop
   pull_request:
     branches:
        - develop
