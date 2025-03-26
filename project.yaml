@@ -13,7 +13,6 @@ targets:
     platform: iOS
     sources: [ EatHub ]
     settings:
-      DEVELOPMENT_TEAM: $(OSX_DEVELOPMENT_TEAM)
       PRODUCT_BUNDLE_IDENTIFIER: com.yandex.sirius.EatHub
       GENERATE_INFOPLIST_FILE: YES
       # Common build settings
