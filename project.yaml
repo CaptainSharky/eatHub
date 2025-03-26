@@ -1,54 +1,58 @@
-name: EatHub
+name: EatHub # Название 
 options:
-  bundleIdPrefix: com.yandex.sirius
+  bundleIdPrefix: com.yandex.sirius # Префикс для bundle ID
 configs:
-  Debug: debug
-  Release: release
+  Debug: debug     
+  Release: release 
 settings:
-  SDKROOT: iphoneos
-  IPHONEOS_DEPLOYMENT_TARGET: "17.5"
+  SDKROOT: iphoneos                     
+  IPHONEOS_DEPLOYMENT_TARGET: "17.5"    
 
 targets:
   EatHub:
-    type: application
-    platform: iOS
-    sources:
-      - path: EatHub
-
+    type: application         
+    platform: iOS              # Платформа
+    sources: [EatHub]          # Папка, где лежат исходники
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.yandex.sirius.EatHub
-      GENERATE_INFOPLIST_FILE: YES
+      PRODUCT_BUNDLE_IDENTIFIER: com.yandex.sirius.EatHub # Полный bundle ID
 
-      # ========== Настройки компиляции ==========
+      GENERATE_INFOPLIST_FILE: YES # Автоматически сгенерировать Info.plist
 
-      CLANG_ENABLE_MODULES: YES
-      CLANG_ENABLE_OBJC_ARC: YES
-      CLANG_ENABLE_OBJC_WEAK: YES
-      CLANG_WARN_OBJC_ROOT_CLASS: YES_ERROR
-      CLANG_WARN_DIRECT_OBJC_ISA_USAGE: YES_ERROR
-      GCC_WARN_UNUSED_VARIABLE: YES
+      # ========== настройки компилятора ==========
 
-      LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+      CLANG_ENABLE_MODULES: YES      # Включает поддержку модулей (быстрая компиляция)
+      CLANG_ENABLE_OBJC_ARC: YES     # Включает автоматическое управление памятью (ARC)
+      CLANG_ENABLE_OBJC_WEAK: YES    # Разрешает использование `weak` ссылок в Objective-C
 
-      MTL_FAST_MATH: YES
-      ONLY_ACTIVE_ARCH: YES
-      COPY_PHASE_STRIP: NO
-      ENABLE_STRICT_OBJC_MSGSEND: YES
+      CLANG_WARN_OBJC_ROOT_CLASS: YES_ERROR       # Предупреждение, если класс не наследуется от NSObject
+      CLANG_WARN_DIRECT_OBJC_ISA_USAGE: YES_ERROR # Ошибка при прямом доступе к isa указателю
+      GCC_WARN_UNUSED_VARIABLE: YES               # Предупреждение, если переменная не используется
 
-      ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
-      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-      ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+      LOCALIZATION_PREFERS_STRING_CATALOGS: YES # Использование `.strings` каталогов вместо устаревших `.strings` файлов 
 
-      CODE_SIGN_STYLE: Automatic
-      CURRENT_PROJECT_VERSION: "1"
-      MARKETING_VERSION: "1.0"
+      MTL_FAST_MATH: YES        # Ускоренные операции с числами с плавающей точкой для Metal
+      ONLY_ACTIVE_ARCH: YES     # Собирает только текущую архитектуру (ускоряет сборку)
 
-      # Указание на ассеты (одна папка)
-      DEVELOPMENT_ASSET_PATHS: "EatHub/EatHub/Design/Resources"
+      COPY_PHASE_STRIP: NO      # Не удалять отладочные символы в Debug
 
-      ENABLE_PREVIEWS: YES
+      ENABLE_STRICT_OBJC_MSGSEND: YES # Проверка корректности вызова Objective-C сообщений (runtime safety)
 
-      # ========== Info.plist ключи ==========
+      ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES # Генерировать Swift-доступ к ассетам
+
+      # ========== Настройка таргета EatHub ==========
+
+      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon           # Имя AppIcon (в Assets)
+      ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor # Имя AccentColor (в Assets)
+      CODE_SIGN_STYLE: Automatic                            # Автоматическая подпись
+
+      CURRENT_PROJECT_VERSION: "1"                          # Внутренняя версия сборки
+      MARKETING_VERSION: "1.0"                              # Версия приложения 
+
+      DEVELOPMENT_ASSET_PATHS: "EatHub/EatHub/Design/Resources" #путь для ассетов
+
+      ENABLE_PREVIEWS: YES # Включает SwiftUI Previews 
+
+      # ========== ключи для Info.plist ==========
 
       INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
       INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
@@ -56,23 +60,24 @@ targets:
       INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
       INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown"
 
+      # Пути поиска фреймворков в рантайме
       LD_RUNPATH_SEARCH_PATHS:
         - "$(inherited)"
         - "@executable_path/Frameworks"
 
-      PRODUCT_NAME: "$(TARGET_NAME)"
-      SWIFT_VERSION: "5.0"
-      TARGETED_DEVICE_FAMILY: "1"
+      PRODUCT_NAME: "$(TARGET_NAME)" 
+      SWIFT_VERSION: "5.0"         
+      TARGETED_DEVICE_FAMILY: "1"  
 
     configs:
       Debug:
-        DEBUG_INFORMATION_FORMAT: dwarf
-        GCC_OPTIMIZATION_LEVEL: "0"
-        SWIFT_OPTIMIZATION_LEVEL: "-Onone"
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
-        MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
+        DEBUG_INFORMATION_FORMAT: dwarf              # Отладочная информация в формате DWARF
+        GCC_OPTIMIZATION_LEVEL: "0"                  # Без оптимизаций
+        SWIFT_OPTIMIZATION_LEVEL: "-Onone"           # Без оптимизаций в Swift
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG   # Добавляет флаг `DEBUG` для условной компиляции
+        MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE        # Включает отладочную инфу для Metal
 
       Release:
-        DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym"
-        ENABLE_NS_ASSERTIONS: NO
-        MTL_ENABLE_DEBUG_INFO: NO
+        DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym" # Полная отладочная информация
+        ENABLE_NS_ASSERTIONS: NO                    # Отключает `assert()` в релизе
+        MTL_ENABLE_DEBUG_INFO: NO                   # Отключает отладочную инфу Metal в релизе
