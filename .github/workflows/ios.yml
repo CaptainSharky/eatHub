@@ -1,0 +1,29 @@
+name: iOS CI
+
+on:
+  push:
+    branches-ignore:
+      - develop
+  pull_request:
+    branches:
+       - develop
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+        - uses: actions/checkout@v4
+
+        - name: Select Xcode 16
+          run: sudo xcode-select -switch /Applications/Xcode_16.app
+          
+        - uses: xavierLowmiller/xcodegen-action@1.2.4
+          with:
+            spec: project.yaml
+            quiet: true
+            version: '2.17.0'
+
+        - name: Build
+          run: xcodebuild clean build -project EatHub.xcodeproj -scheme EatHub 'platform=iOS Simulator,name=iPhone 16,OS=18.0'
+            CODE_SIGNING_ALLOWED=NO
