@@ -14,7 +14,10 @@ struct MainView: View {
     var body: some View {
         ZStack() {
             TabView(selection: $selectedIndex) {
-                HomeView()
+                let requester = APIRequester()
+                let service = MealsService(requester: requester)
+                let viewModel = HomeViewModel(mealsService: service)
+                HomeView(viewModel: viewModel)
                     .tag(MainTabEnum.home)
                 SearchView()
                     .tag(MainTabEnum.search)
