@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct DetailsView: View {
     private enum Constants {
         static let chipSpacing: CGFloat = 8
+        static let closeIconSize: CGFloat = 32
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
         static let imageHeight: CGFloat = 250
         static let spacing: CGFloat = 16
         static let areaIcon = "globe"
         static let categoryIcon = "square.grid.2x2"
+        static let closeIcon = "xmark.circle.fill"
         static let ingredientsTitle = "Ingredients"
         static let instructionsTitle = "Instructions"
         static let youtubeIcon = "play.rectangle.fill"
@@ -26,27 +26,49 @@ struct DetailsView: View {
 
     @ObservedObject var viewModel: DetailsViewModel
 
+    @Environment(\.dismiss) private var dismiss
+
     init(viewModel: DetailsViewModel) {
         self.viewModel = viewModel
     }
 
     public var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Constants.spacing) {
-                makeMealImage()
-                infoSection
-                makeTagsChipsScrollView()
-                ingredientsSection
-                instructionsSection
+        ZStack(alignment: .topTrailing) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: Constants.spacing) {
+                    makeMealImage()
+                    infoSection
+                    makeTagsChipsScrollView()
+                    ingredientsSection
+                    instructionsSection
+                }
             }
-        }
-        .scrollBounceBehavior(.basedOnSize)
-        .if(viewModel.image != nil) {
-            $0.ignoresSafeArea(edges: .top)
+            .scrollBounceBehavior(.basedOnSize)
+            .if(viewModel.image != nil) {
+                $0.ignoresSafeArea(edges: .top)
+            }
+
+            closeButton
+                .padding(.trailing, Constants.spacing)
         }
     }
 
     // MARK: - Subviews
+
+    private var closeButton: some View {
+        Button(action: {
+            dismiss()
+        }) {
+            Image(systemName: Constants.closeIcon)
+                .resizable()
+                .frame(
+                    width: Constants.closeIconSize,
+                    height: Constants.closeIconSize
+                )
+                .foregroundColor(.secondary)
+                .background(Color.white.clipShape(Circle()))
+        }
+    }
 
     private var infoSection: some View {
         VStack(alignment: .leading, spacing: Constants.spacing) {
