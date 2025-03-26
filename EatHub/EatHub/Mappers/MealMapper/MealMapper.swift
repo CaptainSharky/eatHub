@@ -5,34 +5,34 @@
 //  Created by Kirill Prokofyev on 26.03.2025.
 //
 
-struct MealsMapper {
-    static func mapMealsResponse(_ response: MealsResponseModel) -> [Meal] {
-        guard let meals = response.meals else { return [] }
-        return meals.compactMap { mapMeal(from: $0) }
-    }
-
-    static func mapMealItemResponse(_ response: MealItemResponseModel) -> Meal? {
-        mapMeal(from: response)
-    }
-
-    static func mapMealItemResponseToList(_ response: [MealItemResponseModel]) -> [Meal] {
-        response.compactMap { mapMeal(from: $0) }
+extension MealsResponseModel {
+    func mapToMealList() -> [Meal] {
+        guard let meals = self.meals else { return [] }
+        return meals.compactMap { $0.mapToMeal() }
     }
 }
 
-// MARK: - Private methods
+// MARK: - [MealItemResponseModel]
 
-private extension MealsMapper {
-    static func mapMeal(from response: MealItemResponseModel) -> Meal {
+extension Array where Element == MealItemResponseModel {
+    func mapToMealList() -> [Meal] {
+        self.compactMap { $0.mapToMeal() }
+    }
+}
+
+// MARK: - MealItemResponseModel
+
+extension MealItemResponseModel {
+    func mapToMeal() -> Meal {
         Meal(
-            id: response.idMeal ?? "",
-            name: response.strMeal ?? "",
-            category: response.strCategory,
-            instructions: response.strInstructions,
-            thumbnail: response.strMealThumb,
-            tags: response.strTags,
-            youtube: response.strYoutube,
-            ingredients: response.ingredients.compactMap{
+            id: self.idMeal ?? "",
+            name: self.strMeal ?? "",
+            category: self.strCategory,
+            instructions: self.strInstructions,
+            thumbnail: self.strMealThumb,
+            tags: self.strTags,
+            youtube: self.strYoutube,
+            ingredients: self.ingredients.compactMap{
                 Ingredient(name: $0.name, measure: $0.measure)
             }
         )
