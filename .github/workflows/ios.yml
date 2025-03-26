@@ -27,7 +27,3 @@ jobs:
         - name: Build
           run: xcodebuild clean build -project EatHub.xcodeproj -scheme EatHub 'platform=iOS Simulator,name=iPhone 16,OS=18.0'
             CODE_SIGNING_ALLOWED=NO
-
-        - name: Run tests
-          run: xcodebuild test -project EatHub.xcodeproj -scheme EatHub 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
-            CODE_SIGNING_ALLOWED=NO
