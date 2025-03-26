@@ -25,7 +25,7 @@ jobs:
             version: '2.17.0'
 
         - name: Build
-          run: xcodebuild clean build -project clothes_shop.xcodeproj -scheme clothes_shop 'platform=iOS Simulator,name=iPhone 16,OS=18.0'
+          run: xcodebuild clean build -project EatHub.xcodeproj -scheme EatHub 'platform=iOS Simulator,name=iPhone 16,OS=18.0'
 
         - name: Run tests
           run: xcodebuild test -project clothes_shop.xcodeproj -scheme clothes_shop 'platform=iOS Simulator,name=iPhone 16,OS=18.2'
