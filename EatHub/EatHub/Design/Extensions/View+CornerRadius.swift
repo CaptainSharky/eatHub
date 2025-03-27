@@ -1,14 +1,14 @@
 //
-//  RoundedCornerShape.swift
+//  View+CornerRadius.swift
 //  EatHub
 //
 //  Created by Kirill Prokofyev on 26.03.2025.
 //
 
-import SwiftUICore
+import SwiftUI
 import UIKit
 
-struct RoundedCornerShape: Shape {
+fileprivate struct RoundedCornerShape: Shape {
     var radius: CGFloat = .infinity
     var corners: UIRectCorner = .allCorners
 
@@ -19,5 +19,13 @@ struct RoundedCornerShape: Shape {
             cornerRadii: CGSize(width: radius, height: radius)
         )
         return Path(path.cgPath)
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(
+            RoundedCornerShape(radius: radius, corners: corners)
+        )
     }
 }

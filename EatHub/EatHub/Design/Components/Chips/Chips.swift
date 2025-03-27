@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-import SwiftUI
-
-public struct Chips: View {
+struct Chips: View {
     private enum Constants {
         static let horizontalPadding: CGFloat = 12
         static let verticalPadding: CGFloat = 6

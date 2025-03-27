@@ -7,7 +7,7 @@
 
 import SwiftUICore
 
-public final class ChipsViewModel: ObservableObject {
+final class ChipsViewModel: ObservableObject {
 
     let text: String
     let backgroundColor: Color
@@ -15,8 +15,8 @@ public final class ChipsViewModel: ObservableObject {
 
     public init(
         text: String,
-        backgroundColor: Color = Color.green.opacity(0.2),
-        textColor: Color = .secondary
+        backgroundColor: Color = Color("SecondaryColor"),
+        textColor: Color = .white
     ) {
         self.text = text
         self.backgroundColor = backgroundColor

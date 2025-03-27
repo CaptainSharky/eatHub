@@ -9,7 +9,7 @@ import SwiftUICore
 
 final class DetailsViewModel: ObservableObject {
     let title: String
-    let image: Image?
+    let image: Image
     let category: String?
     let area: String?
     let tagsChips: [ChipsViewModel]
@@ -28,7 +28,7 @@ final class DetailsViewModel: ObservableObject {
         youtubeURL: URL? = nil
     ) {
         self.title = title
-        self.image = image
+        self.image = image ?? Image("MealTemplate")
         self.category = category
         self.area = area
         self.tagsChips = tagsChips

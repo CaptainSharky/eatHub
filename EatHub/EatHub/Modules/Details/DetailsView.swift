@@ -15,13 +15,19 @@ struct DetailsView: View {
         static let imageCornerRadius: CGFloat = 24
         static let imageHeight: CGFloat = 250
         static let spacing: CGFloat = 16
-        static let areaIcon = "globe"
-        static let categoryIcon = "square.grid.2x2"
-        static let closeIcon = "xmark.circle.fill"
-        static let ingredientsTitle = "Ingredients"
-        static let instructionsTitle = "Instructions"
-        static let youtubeIcon = "play.rectangle.fill"
-        static let youtubeTitle = "Watch tutorial"
+
+        enum Icons {
+            static let area: String = "globe"
+            static let category: String = "square.grid.2x2"
+            static let close: String = "xmark.circle.fill"
+            static let youtube: String = "play.rectangle.fill"
+        }
+
+        enum Title {
+            static let ingredients: String = "Ingredients"
+            static let instructions: String = "Instructions"
+            static let youtube: String = "Watch tutorial"
+        }
     }
 
     @ObservedObject var viewModel: DetailsViewModel
@@ -44,9 +50,7 @@ struct DetailsView: View {
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
-            .if(viewModel.image != nil) {
-                $0.ignoresSafeArea(edges: .top)
-            }
+            .ignoresSafeArea(edges: .top)
 
             closeButton
                 .padding(.trailing, Constants.spacing)
@@ -59,7 +63,7 @@ struct DetailsView: View {
         Button(action: {
             dismiss()
         }) {
-            Image(systemName: Constants.closeIcon)
+            Image(systemName: Constants.Icons.close)
                 .resizable()
                 .frame(
                     width: Constants.closeIconSize,
@@ -86,17 +90,15 @@ struct DetailsView: View {
 
     @ViewBuilder
     private func makeMealImage() -> some View {
-        if let image = viewModel.image {
-            image
-                .resizable()
-                .scaledToFill()
-                .frame(height: Constants.imageHeight)
-                .clipped()
-                .cornerRadius(
-                    Constants.imageCornerRadius,
-                    corners: [.bottomLeft, .bottomRight]
-                )
-        }
+        viewModel.image
+            .resizable()
+            .scaledToFill()
+            .frame(height: Constants.imageHeight)
+            .clipped()
+            .cornerRadius(
+                Constants.imageCornerRadius,
+                corners: [.bottomLeft, .bottomRight]
+            )
     }
 
     @ViewBuilder
@@ -117,7 +119,7 @@ struct DetailsView: View {
         Group {
             if !viewModel.ingredients.isEmpty {
                 VStack(alignment: .leading, spacing: Constants.spacing) {
-                    Text(Constants.ingredientsTitle)
+                    Text(Constants.Title.ingredients)
                         .font(.headline)
                         .padding(.top)
 
@@ -141,35 +143,7 @@ struct DetailsView: View {
         Group {
             if let instructions = viewModel.instructions {
                 VStack {
-                    VStack(alignment: .leading, spacing: Constants.spacing) {
-                        Text(Constants.instructionsTitle)
-                            .font(.headline)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                        Text(instructions)
-                            .font(.body)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                        if let url = viewModel.youtubeURL {
-                            Link(destination: url) {
-                                HStack {
-                                    Image(systemName: Constants.youtubeIcon)
-                                    Text(Constants.youtubeTitle)
-                                        .bold()
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(Constants.spacing)
-                                .foregroundColor(.primary)
-                                .background(Color.white)
-                                .cornerRadius(Constants.spacing)
-                            }
-                        }
-                    }
-                    .padding(Constants.spacing)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.secondary.opacity(0.1))
-                    .cornerRadius(Constants.spacing)
+                    makeInstructionsContent(instructions: instructions)
                 }
                 .padding(Constants.spacing)
                 .frame(maxWidth: .infinity)
@@ -177,12 +151,51 @@ struct DetailsView: View {
         }
     }
 
+    @ViewBuilder
+    private func makeInstructionsContent(instructions: String) -> some View {
+        VStack(alignment: .leading, spacing: Constants.spacing) {
+            Text(Constants.Title.instructions)
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Text(instructions)
+                .font(.body)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            if let url = viewModel.youtubeURL {
+                makeYoutubeLink(url: url)
+            }
+        }
+        .padding(Constants.spacing)
+        .frame(maxWidth: .infinity)
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(Constants.spacing)
+    }
+
+    @ViewBuilder
+    private func makeYoutubeLink(url: URL) -> some View {
+        Link(destination: url) {
+            HStack {
+                Image(systemName: Constants.Icons.youtube)
+                Text(Constants.Title.youtube)
+                    .bold()
+            }
+            .frame(maxWidth: .infinity)
+            .padding(Constants.spacing)
+            .foregroundColor(.accent)
+            .background(Color.white)
+            .cornerRadius(Constants.spacing)
+        }
+    }
+
+
     // MARK: - Reusable Helpers
 
     @ViewBuilder
     private func makeCategoryIfNeeded() -> some View {
         if let category = viewModel.category {
-            Label(category, systemImage: Constants.categoryIcon)
+            Label(category, systemImage: Constants.Icons.category)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
@@ -191,7 +204,7 @@ struct DetailsView: View {
     @ViewBuilder
     private func makeAreaIfNeeded() -> some View {
         if let area = viewModel.area {
-            Label(area, systemImage: Constants.areaIcon)
+            Label(area, systemImage: Constants.Icons.area)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
