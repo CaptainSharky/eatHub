@@ -41,7 +41,11 @@ extension MealsService: MealsServiceInterface {
         requester.randomMeal()
             .tryMap { response in
                 guard let firstMeal = response.meals.first else {
-                    throw NSError(domain: "MappingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No meal found"])
+                    throw NSError(
+                        domain: "MappingError",
+                        code: 0,
+                        userInfo: [NSLocalizedDescriptionKey: "No meal found"]
+                    )
                 }
                 return firstMeal.mapToMeal()
             }

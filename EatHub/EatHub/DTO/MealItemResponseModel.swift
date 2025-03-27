@@ -18,7 +18,9 @@ struct MealItemResponseModel: Decodable {
     let ingredients: [IngredientResponseModel]
 
     enum CodingKeys: String, CodingKey {
-        case idMeal, strArea, strCategory, strInstructions, strMeal, strMealThumb, strTags, strYoutube
+        case idMeal, strArea, strCategory,
+             strInstructions, strMeal, strMealThumb,
+             strTags, strYoutube
     }
 
     init(from decoder: Decoder) throws {
@@ -53,7 +55,12 @@ struct MealItemResponseModel: Decodable {
                     forKey: measureKey
                 )?.trimmingCharacters(in: .whitespacesAndNewlines)
 
-                ingredientResponse.append(IngredientResponseModel(name: ingredientName, measure: measure))
+                ingredientResponse.append(
+                    IngredientResponseModel(
+                        name: ingredientName,
+                        measure: measure
+                    )
+                )
             }
         }
         ingredients = ingredientResponse
@@ -64,7 +71,7 @@ struct MealItemResponseModel: Decodable {
 
 fileprivate struct DynamicCodingKeys: CodingKey {
     var stringValue: String
-    var intValue: Int? { return nil }
+    var intValue: Int? { nil }
 
     // MARK: Lifecycle
 
@@ -73,6 +80,6 @@ fileprivate struct DynamicCodingKeys: CodingKey {
     }
 
     init?(intValue: Int) {
-        return nil
+        nil
     }
 }

@@ -7,7 +7,7 @@
 
 extension MealsResponseModel {
     func mapToMealList() -> [Meal] {
-        return meals.compactMap { $0.mapToMeal() }
+        meals.compactMap { $0.mapToMeal() }
     }
 }
 
@@ -31,7 +31,7 @@ extension MealItemResponseModel {
             thumbnail: self.strMealThumb,
             tags: self.strTags,
             youtube: self.strYoutube,
-            ingredients: self.ingredients.compactMap{
+            ingredients: self.ingredients.compactMap {
                 Ingredient(name: $0.name, measure: $0.measure)
             }
         )

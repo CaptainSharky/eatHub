@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainTabBar: View {
     @Binding var selectedIndex: MainTabEnum
-    
+
     var body: some View {
         HStack(spacing: 0) {
              ForEach(MainTabEnum.allCases, id: \.self) { tabType in
@@ -32,7 +32,7 @@ extension MainTabBar {
         let isSelected = selectedIndex == tabType
         let foregroundColor: Color = isSelected ? .red : .black
         let scaleEffect: CGFloat = isSelected ? 1.4 : 1.0
-        
+
         Button {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.5, blendDuration: 0.5)) {
                 selectedIndex = tabType
@@ -48,10 +48,9 @@ extension MainTabBar {
 }
 
 struct MainTabBar_Previews: PreviewProvider {
-    
+
     @State static var selectedTab = MainTabEnum.home
     static var previews: some View {
         MainTabBar(selectedIndex: $selectedTab)
     }
 }
-

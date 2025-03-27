@@ -13,6 +13,19 @@ targets:
     type: application         
     platform: iOS              # Платформа
     sources: [EatHub]          # Папка, где лежат исходники
+    prebuildScripts:
+      - script: |
+                if [[ $(uname -m) == "arm64" ]]; then
+                  export PATH="/opt/homebrew/bin:$PATH"
+                fi
+                if command -v swiftlint >/dev/null 2>&1; then
+                  swiftlint
+                else
+                  echo "warning: SwiftLint is not installed. Install it using: brew install swiftlint"
+                  exit 1
+                fi
+        name: SwiftLint
+        basedOnDependencyAnalysis: false
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.yandex.sirius.EatHub # Полный bundle ID
 
