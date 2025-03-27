@@ -9,32 +9,21 @@ import SwiftUI
 
 struct MainView: View {
     
-    @ObservedObject var viewModel: MainViewModel = MainViewModel()
+    @State var selectedIndex: MainTabEnum = .home
     
     var body: some View {
-        ZStack {
-            navigationBasedOnTab(index: viewModel.selectedIndex)
+        ZStack() {
+            TabView(selection: $selectedIndex) {
+                HomeView()
+                    .tag(MainTabEnum.home)
+                SearchView()
+                    .tag(MainTabEnum.search)
+            }
+
             
             VStack(spacing: 0) {
                 Spacer()
-                MainTabBar(selectedIndex: $viewModel.selectedIndex)
-            }
-        }
-    }
-}
-
-extension MainView {
-    func navigationBasedOnTab(index: MainTabEnum) -> some View {
-        Group {
-            switch index {
-                case .home:
-                    HomeView()
-                case .search:
-                    SearchView()
-                case .favorites:
-                    EmptyView()
-                case .random:
-                    EmptyView()
+                MainTabBar(selectedIndex: $selectedIndex)
             }
         }
     }

@@ -15,15 +15,15 @@ enum MainTabEnum: Int, CaseIterable {
     
     var imageName: String {
         switch self {
-            //TODO: - SF Symbols добавить когда найдем
+            //TODO: - SF Symbols или кастомные добавить когда найдем
             case .home:
-                return "frying.pan"
+                "frying.pan"
             case .search:
-                return "magnifyingglass"
+                "magnifyingglass"
             case .favorites:
-                return "star.square.on.square.fill"
+                "star.square.on.square.fill"
             case .random:
-                return "shuffle"
+                "shuffle"
         }
     }
 }
