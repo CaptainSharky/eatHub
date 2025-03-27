@@ -11,7 +11,7 @@ import SwiftUI
 struct EatHubApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
         }
     }
 }
