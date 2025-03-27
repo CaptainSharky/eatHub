@@ -1,6 +1,5 @@
 import SwiftUI
 
-// Ячейка блюда
 struct RecipeRow: View {
     let recipe: Recipe
     let onToggleFavorite: () -> Void

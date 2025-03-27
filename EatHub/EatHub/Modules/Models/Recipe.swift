@@ -1,8 +1,7 @@
 import Foundation
 
-// Модель рецепта
 struct Recipe: Identifiable, Equatable {
-    let id = UUID()
+    let id: Int
     var name: String
     var imageName: String
     var isFavorite: Bool = true

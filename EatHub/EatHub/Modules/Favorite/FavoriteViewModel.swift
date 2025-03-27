@@ -1,6 +1,5 @@
 import Foundation
 
-// ViewModel получаемых данных
 class FavoriteViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
 
@@ -15,18 +14,18 @@ class FavoriteViewModel: ObservableObject {
 
     private func loadMockData() {
         recipes = [
-            Recipe(name: "Паста Карбонара", imageName: "karbonara"),
-            Recipe(name: "Пицца Маргарита", imageName: "margarita"),
-            Recipe(name: "Салат Цезарь", imageName: "caesar"),
-            Recipe(name: "Паста Карбонара", imageName: "karbonara"),
-            Recipe(name: "Пицца Маргарита", imageName: "margarita"),
-            Recipe(name: "Салат Цезарь", imageName: "caesar"),
-            Recipe(name: "Паста Карбонара", imageName: "karbonara"),
-            Recipe(name: "Пицца Маргарита", imageName: "margarita"),
-            Recipe(name: "Салат Цезарь", imageName: "caesar"),
-            Recipe(name: "Паста Карбонара", imageName: "karbonara"),
-            Recipe(name: "Пицца Маргарита", imageName: "margarita"),
-            Recipe(name: "Салат Цезарь", imageName: "caesar")
+            Recipe(id: 0, name: "Паста Карбонара", imageName: "karbonara"),
+            Recipe(id: 1, name: "Пицца Маргарита", imageName: "margarita"),
+            Recipe(id: 2, name: "Салат Цезарь", imageName: "caesar"),
+            Recipe(id: 3, name: "Паста Карбонара", imageName: "karbonara"),
+            Recipe(id: 4, name: "Пицца Маргарита", imageName: "margarita"),
+            Recipe(id: 5, name: "Салат Цезарь", imageName: "caesar"),
+            Recipe(id: 6, name: "Паста Карбонара", imageName: "karbonara"),
+            Recipe(id: 7, name: "Пицца Маргарита", imageName: "margarita"),
+            Recipe(id: 8, name: "Салат Цезарь", imageName: "caesar"),
+            Recipe(id: 9, name: "Паста Карбонара", imageName: "karbonara"),
+            Recipe(id: 10, name: "Пицца Маргарита", imageName: "margarita"),
+            Recipe(id: 11, name: "Салат Цезарь", imageName: "caesar")
         ]
     }
 }
