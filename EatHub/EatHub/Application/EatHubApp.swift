@@ -14,5 +14,4 @@ struct EatHubApp: App {
             ContentView()
         }
     }
-    
 }

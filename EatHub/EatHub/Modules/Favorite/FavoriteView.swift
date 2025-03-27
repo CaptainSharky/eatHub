@@ -1,5 +1,6 @@
 import SwiftUI
 
+// Шаблон экрана Избранное
 struct FavoriteView: View {
     @StateObject private var viewModel = FavoriteViewModel()
 

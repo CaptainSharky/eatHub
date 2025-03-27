@@ -1,5 +1,6 @@
 import SwiftUI
 
+// Заглушка экрана деталей
 struct RecipeDetailView: View {
     let recipe: Recipe
 

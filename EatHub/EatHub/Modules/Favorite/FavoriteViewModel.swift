@@ -1,5 +1,6 @@
 import Foundation
 
+// ViewModel получаемых данных
 class FavoriteViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
 
