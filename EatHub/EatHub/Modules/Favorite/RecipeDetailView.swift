@@ -1,5 +1,6 @@
 import SwiftUI
 
+// Временный экран деталей рецепта (удалим)
 struct RecipeDetailView: View {
     let recipe: Recipe
 
