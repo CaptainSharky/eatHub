@@ -14,14 +14,15 @@ struct FavoriteView: View {
 
                     LazyVStack(spacing: 8) {
                         ForEach(viewModel.recipes) { recipe in
-                            NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
+//                            TODO: Добавить переход
+//                            NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
                                 RecipeRow(
                                     recipe: recipe,
                                     onToggleFavorite: {
                                         viewModel.toggleFavorite(for: recipe)
                                     }
                                 )
-                            }
+//                            }
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
@@ -33,4 +34,8 @@ struct FavoriteView: View {
             .navigationBarHidden(true)
         }
     }
+}
+
+#Preview {
+    FavoriteView()
 }
