@@ -20,6 +20,6 @@ Sirius 2025 mobile project
    ```
 3. Generate .xcodeproj file with Homebrew
    ```sh
-   sh start.sh
+   sh start.sh --full
    ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
