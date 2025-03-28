@@ -5,10 +5,9 @@
 //  Created by Kirill Prokofyev on 25.03.2025.
 //
 
-import Moya
 import Foundation
 
-extension APIProvider: TargetType {
+extension APIProvider {
     var baseURL: URL {
         return URL(string: "https://www.themealdb.com/api/json/v2/9973533")!
     }
@@ -30,27 +29,33 @@ extension APIProvider: TargetType {
         }
     }
 
-    var method: Moya.Method {
-        return .get
+    var method: String {
+        return "GET"
     }
 
-    var sampleData: Data {
-        // TODO: Добавить моки
-        return Data()
-    }
-
-    var task: Task {
+    var queryItems: [URLQueryItem]? {
         switch self {
             case .searchMeal(let name):
-                return .requestParameters(parameters: ["s": name], encoding: URLEncoding.default)
+                return [URLQueryItem(name: "s", value: name)]
             case .mealDetails(let id):
-                return .requestParameters(parameters: ["i": id], encoding: URLEncoding.default)
+                return [URLQueryItem(name: "i", value: id)]
             default:
-                return .requestPlain
+                return nil
         }
     }
 
-    var headers: [String: String]? {
-        return ["Content-type": "application/json"]
+    var urlRequest: URLRequest? {
+        var components = URLComponents(
+            url: baseURL.appendingPathComponent(path),
+            resolvingAgainstBaseURL: false
+        )
+        components?.queryItems = queryItems
+
+        guard let url = components?.url else { return nil }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        return request
     }
 }
