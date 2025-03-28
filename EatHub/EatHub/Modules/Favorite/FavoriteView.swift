@@ -17,7 +17,7 @@ struct FavoriteView: View {
     }
     
     private var favoritesTitle: some View {
-        Text("Избранное")
+        Text(viewModel.title)
             .font(.largeTitle)
             .bold()
             .padding([.horizontal, .top])

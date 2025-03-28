@@ -2,6 +2,7 @@ import Foundation
 
 class FavoriteViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
+    let title = "Favourites"
 
     init() {
         loadMockData()
