@@ -13,11 +13,19 @@ targets:
     type: application         
     platform: iOS              # Платформа
     sources: [EatHub]          # Папка, где лежат исходники
-    dependencies:
-      - package: Moya
-        product: Moya
-      - package: Moya
-        product: CombineMoya
+    prebuildScripts:
+      - script: |
+                if [[ $(uname -m) == "arm64" ]]; then
+                  export PATH="/opt/homebrew/bin:$PATH"
+                fi
+                if command -v swiftlint >/dev/null 2>&1; then
+                  swiftlint
+                else
+                  echo "warning: SwiftLint is not installed. Install it using: brew install swiftlint"
+                  exit 1
+                fi
+        name: SwiftLint
+        basedOnDependencyAnalysis: false
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.yandex.sirius.EatHub # Полный bundle ID
 
@@ -86,7 +94,3 @@ targets:
         DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym" # Полная отладочная информация
         ENABLE_NS_ASSERTIONS: NO                    # Отключает `assert()` в релизе
         MTL_ENABLE_DEBUG_INFO: NO                   # Отключает отладочную инфу Metal в релизе
-packages:
-  Moya:
-    url: https://github.com/Moya/Moya.git
-    from: 15.0.0

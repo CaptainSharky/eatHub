@@ -12,10 +12,10 @@ enum MainTabEnum: Int, CaseIterable {
     case search
     case favorites
     case random
-    
+
     var imageName: String {
         switch self {
-            //TODO: - SF Symbols или кастомные добавить когда найдем
+            // TODO: - SF Symbols или кастомные добавить когда найдем
             case .home:
                 "frying.pan"
             case .search:

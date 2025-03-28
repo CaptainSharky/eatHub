@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct MainView: View {
-    
+
     @State var selectedIndex: MainTabEnum = .home
-    
+
     var body: some View {
-        ZStack() {
+        ZStack {
             TabView(selection: $selectedIndex) {
-                HomeView()
+                let requester = APIRequester()
+                let service = MealsService(requester: requester)
+                let viewModel = HomeViewModel(mealsService: service)
+                HomeView(viewModel: viewModel)
                     .tag(MainTabEnum.home)
                 SearchView()
                     .tag(MainTabEnum.search)
             }
 
-            
             VStack(spacing: 0) {
                 Spacer()
                 MainTabBar(selectedIndex: $selectedIndex)

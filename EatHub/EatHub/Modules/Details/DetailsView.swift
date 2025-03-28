@@ -189,7 +189,6 @@ struct DetailsView: View {
         }
     }
 
-
     // MARK: - Reusable Helpers
 
     @ViewBuilder

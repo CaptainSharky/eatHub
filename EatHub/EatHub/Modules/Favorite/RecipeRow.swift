@@ -3,7 +3,7 @@ import SwiftUI
 struct RecipeRow: View {
     let recipe: Recipe
     let onToggleFavorite: () -> Void
-    
+
     private enum Constants {
         static let imageWidth: CGFloat = 60
         static let imageHeight: CGFloat = 60
