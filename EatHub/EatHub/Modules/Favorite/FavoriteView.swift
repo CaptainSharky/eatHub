@@ -15,13 +15,15 @@ struct FavoriteView: View {
             .navigationBarHidden(true)
         }
     }
-    var favoritesTitle: some View {
+    
+    private var favoritesTitle: some View {
         Text("Избранное")
             .font(.largeTitle)
             .bold()
             .padding([.horizontal, .top])
     }
-    var favoritesList: some View {
+
+    private var favoritesList: some View {
         LazyVStack(spacing: 8) {
             ForEach(viewModel.recipes) { recipe in
 //              TODO: Добавить переход
