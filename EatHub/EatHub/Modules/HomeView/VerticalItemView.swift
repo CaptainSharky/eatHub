@@ -7,17 +7,12 @@
 import SwiftUI
 
 struct VerticalItemView: View {
-    @EnvironmentObject var viewModel: MainViewModel
-    let index: Int
+    let meal: Meal
 
     var body: some View {
-        let meal = viewModel.verticalMeals[index]
-
         HStack(spacing: 12) {
             AsyncImage(url: URL(string: meal.thumbnail ?? "")) { image in
-                image
-                    .resizable()
-                    .scaledToFill()
+                image.resizable().scaledToFill()
             } placeholder: {
                 Color.gray.opacity(0.3)
             }
@@ -26,12 +21,9 @@ struct VerticalItemView: View {
             .cornerRadius(20)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(meal.name)
-                    .font(.headline)
+                Text(meal.name).font(.headline)
                 if let category = meal.category {
-                    Text(category)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                    Text(category).font(.subheadline).foregroundColor(.gray)
                 }
             }
 

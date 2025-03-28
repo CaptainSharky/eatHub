@@ -7,21 +7,16 @@
 
 import SwiftUI
 
-private class AppearOnceTracker: ObservableObject {
-    @Published var hasAppeared = false
-}
-
 struct OnFirstAppearModifier: ViewModifier {
-    @StateObject private var tracker = AppearOnceTracker()
+    @State private var hasAppeared = false
     let action: () -> Void
 
     func body(content: Content) -> some View {
         content
             .onAppear {
-                if !tracker.hasAppeared {
-                    tracker.hasAppeared = true
-                    action()
-                }
+                guard !hasAppeared else { return }
+                hasAppeared = true
+                action()
             }
     }
 }

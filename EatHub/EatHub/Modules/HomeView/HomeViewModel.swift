@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class MainViewModel: ObservableObject {
+final class HomeViewModel: ObservableObject {
     @Published var horizontalMeals: [Meal] = []
     @Published var verticalMeals: [Meal] = []
     @Published var errorMessage: String?

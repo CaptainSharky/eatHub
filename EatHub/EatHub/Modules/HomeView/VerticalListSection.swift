@@ -7,12 +7,12 @@
 import SwiftUI
 
 struct VerticalListSection: View {
-    @EnvironmentObject var viewModel: MainViewModel
+    let meals: [Meal]
 
     var body: some View {
         VStack(spacing: 12) {
-            ForEach(viewModel.verticalMeals.indices, id: \.self) { index in
-                VerticalItemView(index: index)
+            ForEach(meals, id: \.id) { meal in
+                VerticalItemView(meal: meal)
             }
         }
     }

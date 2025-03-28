@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct HorizontalScrollSection: View {
-    @EnvironmentObject var viewModel: MainViewModel
+    let meals: [Meal]
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(viewModel.horizontalMeals.indices, id: \.self) { index in
-                    HorizontalItemView(index: index)
+                ForEach(meals, id: \.id) { meal in
+                    HorizontalItemView(meal: meal)
                 }
             }
             .padding(.horizontal)

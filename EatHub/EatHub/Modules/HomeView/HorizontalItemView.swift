@@ -4,21 +4,15 @@
 //
 //  Created by Даниил Дементьев on 27.03.2025.
 //
-
 import SwiftUI
 
 struct HorizontalItemView: View {
-    @EnvironmentObject var viewModel: MainViewModel
-    let index: Int
+    let meal: Meal
 
     var body: some View {
-        let meal = viewModel.horizontalMeals[index]
-
         ZStack {
             AsyncImage(url: URL(string: meal.thumbnail ?? "")) { image in
-                image
-                    .resizable()
-                    .scaledToFill()
+                image.resizable().scaledToFill()
             } placeholder: {
                 Color.gray.opacity(0.3)
             }
@@ -45,4 +39,5 @@ struct HorizontalItemView: View {
         }
     }
 }
+
 

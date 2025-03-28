@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel: MainViewModel
+    @StateObject private var viewModel: HomeViewModel
 
     init() {
         let requester = APIRequester()
         let service = MealsService(requester: requester)
-        _viewModel = StateObject(wrappedValue: MainViewModel(mealsService: service))
+        _viewModel = StateObject(wrappedValue: HomeViewModel(mealsService: service))
     }
 
     var body: some View {
@@ -18,8 +18,8 @@ struct HomeView: View {
             } else {
                 ScrollView(.vertical) {
                     VStack(alignment: .leading, spacing: 16) {
-                        HorizontalScrollSection()
-                        VerticalListSection()
+                        HorizontalScrollSection(meals: viewModel.horizontalMeals)
+                        VerticalListSection(meals: viewModel.verticalMeals)
                     }
                     .padding(.vertical)
                 }
