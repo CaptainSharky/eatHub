@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 final class APIRequester {
-    // MARK:  Private properties
+    // MARK: Private properties
 
     let session: URLSession = {
         let configuration = URLSessionConfiguration.default
@@ -23,7 +23,7 @@ final class APIRequester {
         return URLSession(configuration: configuration)
     }()
 
-    // MARK:  Private methods
+    // MARK: Private methods
 
     private func request<T: Decodable>(target: APIProvider, type: T.Type) -> AnyPublisher<T, Error> {
         guard let request = target.urlRequest else {

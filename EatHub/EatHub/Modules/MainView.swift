@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct MainView: View {
-    
+
     @State var selectedIndex: MainTabEnum = .home
-    
+
     var body: some View {
-        ZStack() {
+        ZStack {
             TabView(selection: $selectedIndex) {
                 HomeView()
                     .tag(MainTabEnum.home)
@@ -20,7 +20,6 @@ struct MainView: View {
                     .tag(MainTabEnum.search)
             }
 
-            
             VStack(spacing: 0) {
                 Spacer()
                 MainTabBar(selectedIndex: $selectedIndex)

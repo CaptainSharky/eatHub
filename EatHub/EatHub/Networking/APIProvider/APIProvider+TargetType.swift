@@ -9,7 +9,8 @@ import Foundation
 
 extension APIProvider {
     var baseURL: URL {
-        return URL(string: "https://www.themealdb.com/api/json/v2/9973533")!
+        // swiftlint:disable:next force_unwrapping
+        URL(string: "https://www.themealdb.com/api/json/v2/9973533")!
     }
 
     var path: String {
@@ -30,9 +31,10 @@ extension APIProvider {
     }
 
     var method: String {
-        return "GET"
+        "GET"
     }
 
+    // swiftlint:disable:next discouraged_optional_collection
     var queryItems: [URLQueryItem]? {
         switch self {
             case .searchMeal(let name):

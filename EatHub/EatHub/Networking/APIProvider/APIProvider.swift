@@ -16,7 +16,7 @@ enum APIProvider {
     /// Lookup a single random meal
     case randomMeal
 
-    ///Lookup a selection of 10 random meals
+    /// Lookup a selection of 10 random meals
     case randomSelection
 
     /// List all meal categories
