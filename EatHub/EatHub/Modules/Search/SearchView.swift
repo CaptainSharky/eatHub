@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct SearchView: View {
-    
-    @State var viewModel = SearchViewModel()
-    
+
+    // MARK: - ViewModel
+    @State var viewModel: SearchViewModel
+
+    // MARK: - UI properties
+    @FocusState var isTextFieldFocused: Bool
+
+    // MARK: - Constants
     private enum Constants {
         static let topPadding: CGFloat = 32
         static let horizontalPadding: CGFloat = 16
@@ -22,7 +27,7 @@ struct SearchView: View {
             static let clear: String = "xmark.circle.fill"
         }
 
-        //TODO: подумать над тайтлами
+        // TODO: подумать над тайтлами
         enum Title {
             static let searchBarTitle: String = "Что хотите найти?"
             static func errorMessage(_ text: String) -> String {
@@ -31,39 +36,42 @@ struct SearchView: View {
             static let emptyResultsTitle: String = "Не нашлось рецептов по вашему запросу"
             static let startTitle: String = "Что будем готовить?"
         }
-        
+
         enum Colors {
-            static let darkGray: Color = Color(uiColor: .systemGray)
+            static let darkGray = Color(uiColor: .systemGray)
+            static let lightGray = Color(uiColor: .systemGray6)
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             searchBar
             bodyView
+            VerticalListSection(meals: viewModel.results)
         }
         .frame(maxWidth: .infinity)
     }
 }
 
 extension SearchView {
-    
+
+    // MARK: - View Elements
     private var searchBar: some View {
         HStack {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(#colorLiteral(red: 0.462, green: 0.462, blue: 0.502, alpha: 0.12)))
+                    .fill(Constants.Colors.lightGray)
                     .frame(height: 36)
                 HStack(spacing: 0) {
                     Button(action: {
-                        viewModel.isTextFieldFocused.toggle()
+                        isTextFieldFocused.toggle()
                     }, label: {
                         Image(systemName: Constants.Icons.search)
                     })
                     .foregroundColor(Constants.Colors.darkGray)
-                        .padding(.leading, 8)
+                    .padding(.leading, 8)
                     TextField(Constants.Title.searchBarTitle, text: $viewModel.searchText)
-                        .focused(viewModel.$isTextFieldFocused)
+                        .focused($isTextFieldFocused)
                         .frame(height: 36)
                     Button(action: {
                         viewModel.searchText = ""
@@ -75,21 +83,25 @@ extension SearchView {
                 }
             }
         }
-        .padding(EdgeInsets(top: Constants.topPadding,
-                            leading: Constants.horizontalPadding,
-                            bottom: Constants.bottomPadding,
-                            trailing: Constants.horizontalPadding))
+        .padding(
+            EdgeInsets(
+                top: Constants.topPadding,
+                leading: Constants.horizontalPadding,
+                bottom: Constants.bottomPadding,
+                trailing: Constants.horizontalPadding
+            )
+        )
     }
-    
+
     @ViewBuilder
     private var bodyView: some View {
         if viewModel.isLoading {
             Spacer()
             ProgressView()
             Spacer()
-        } else if viewModel.errorMessage != nil {
+        } else if let error = viewModel.errorMessage {
             Spacer()
-            Text(Constants.Title.errorMessage(viewModel.errorMessage!))
+            Text(Constants.Title.errorMessage(error))
             Spacer()
         } else if viewModel.results.isEmpty && !viewModel.searchText.isEmpty {
             Spacer()
@@ -102,7 +114,7 @@ extension SearchView {
         } else {
             ScrollView {
                 Spacer()
-                //TODO: отображение результатов поиска из вью модельки
+                // TODO: отображение результатов поиска из вью модельки
                 Text("Тут результаты")
                 Spacer()
             }
@@ -110,6 +122,9 @@ extension SearchView {
     }
 }
 
+// MARK: - Preview
 #Preview {
-    SearchView()
+    let service = MealsService(requester: APIRequester())
+    let viewModel = SearchViewModel(mealService: service)
+    return SearchView(viewModel: viewModel)
 }

@@ -9,17 +9,18 @@ import SwiftUI
 
 struct MainView: View {
 
+    // MARK: - Properties
     @State var selectedIndex: MainTabEnum = .home
+
+    // MARK: - ViewModel
+    let viewModel: MainViewModel
 
     var body: some View {
         ZStack {
             TabView(selection: $selectedIndex) {
-                let requester = APIRequester()
-                let service = MealsService(requester: requester)
-                let viewModel = HomeViewModel(mealsService: service)
-                HomeView(viewModel: viewModel)
+                HomeView(viewModel: viewModel.homeViewModel)
                     .tag(MainTabEnum.home)
-                SearchView()
+                SearchView(viewModel: viewModel.searchViewModel)
                     .tag(MainTabEnum.search)
             }
 
@@ -32,5 +33,6 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    let dependencies = AppDependencies()
+    return MainView(viewModel: dependencies.mainViewModel)
 }

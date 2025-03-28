@@ -10,16 +10,17 @@ import SwiftUI
 final class SearchViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var results: [Meal] = []
-    @FocusState var isTextFieldFocused: Bool
-    
+
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
-    
-    init() {
-        
+
+    private let mealService: MealsServiceInterface
+
+    init(mealService: MealsServiceInterface) {
+        self.mealService = mealService
     }
-    
+
     func search() {
-        
+
     }
 }
