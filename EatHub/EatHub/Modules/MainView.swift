@@ -11,9 +11,11 @@ struct MainView: View {
 
     @State var selectedIndex: MainTabEnum = .home
     var dependencies: AppDependencies
+    private var launchScreenState: LaunchScreenStateManager
 
-    init(dependencies: AppDependencies) {
+    init(dependencies: AppDependencies, launchScreenState: LaunchScreenStateManager) {
         self.dependencies = dependencies
+        self.launchScreenState = launchScreenState
         UITabBar.appearance().isHidden = true
     }
 
@@ -33,10 +35,15 @@ struct MainView: View {
                 MainTabBar(selectedIndex: $selectedIndex)
             }
         }
+        .task {
+            try? await Task.sleep(for: .seconds(2))
+            launchScreenState.dismiss()
+        }
     }
 }
 
 #Preview {
     let dependencies = AppDependencies()
-    return MainView(dependencies: dependencies)
+    let launchScreenState = LaunchScreenStateManager()  // Добавляем создание экземпляра
+    return MainView(dependencies: dependencies, launchScreenState: launchScreenState)
 }

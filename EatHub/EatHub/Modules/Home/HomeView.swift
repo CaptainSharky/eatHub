@@ -1,3 +1,10 @@
+//
+//  HomeView.swift
+//  EatHub
+//
+//  Created by Даниил Дементьев on 26.03.2025.
+//
+
 import SwiftUI
 
 struct HomeView: View {

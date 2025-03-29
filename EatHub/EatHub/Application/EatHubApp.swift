@@ -10,11 +10,18 @@ import SwiftUI
 @main
 struct EatHubApp: App {
 
+    @StateObject var launchScreenStateManager = LaunchScreenStateManager()
+
     private let dependencies = AppDependencies()
 
     var body: some Scene {
         WindowGroup {
-            MainView(dependencies: dependencies)
+            ZStack {
+                MainView(dependencies: dependencies, launchScreenState: launchScreenStateManager)
+                if launchScreenStateManager.state != .finished {
+                    LaunchScreenView(launchScreenStateManager: launchScreenStateManager)
+                }
+            }
         }
     }
 }
