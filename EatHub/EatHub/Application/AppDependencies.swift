@@ -13,6 +13,7 @@ struct AppDependencies {
     let homeViewModel: HomeViewModel
     let searchViewModel: SearchViewModel
     let mainViewModel: MainViewModel
+    let favoriteViewModel: FavoriteViewModel
 
     init() {
         let apiRequester = APIRequester()
@@ -20,10 +21,12 @@ struct AppDependencies {
 
         self.homeViewModel = HomeViewModel(mealsService: mealsService)
         self.searchViewModel = SearchViewModel(mealService: mealsService)
+        self.favoriteViewModel = FavoriteViewModel()
 
         self.mainViewModel = MainViewModel(
             homeViewModel: homeViewModel,
-            searchViewModel: searchViewModel
+            searchViewModel: searchViewModel,
+            favoriteViewModel: favoriteViewModel
         )
     }
 }

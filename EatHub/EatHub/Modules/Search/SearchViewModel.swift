@@ -22,7 +22,6 @@ final class SearchViewModel: ObservableObject {
     init(mealService: MealsServiceInterface) {
         self.mealService = mealService
         self.debouncer = Debouncer(timeInterval: 1, handler: { [weak self] in
-//            print("debounce сработал, вызываем search()")
             self?.search()
         })
 
@@ -30,7 +29,6 @@ final class SearchViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newText in
                 guard !newText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-//                print("$searchText получил новое значение: \(newText)")
                 self?.errorMessage = nil
                 self?.debouncer?.renewInterval()
             }
@@ -52,7 +50,6 @@ final class SearchViewModel: ObservableObject {
             }, receiveValue: { [weak self] meals in
                 let limitedMeals = Array(meals.prefix(10))
                 self?.results = limitedMeals
-//                print("Найдено рецептов: \(limitedMeals)")
             })
             .store(in: &cancellables)
     }

@@ -17,10 +17,15 @@ struct SearchView: View {
 
     // MARK: - Constants
     private enum Constants {
+        static let bodySpacing: CGFloat = 16
+
         static let topPadding: CGFloat = 32
         static let horizontalPadding: CGFloat = 16
-        static let bottomPadding: CGFloat = 0
         static let imageCornerRadius: CGFloat = 24
+
+        static let searchBarHeight: CGFloat = 36
+        static let searchBarIconsPadding: CGFloat = 8
+        static let searchBarCornerRadius: CGFloat = 8
 
         enum Icons {
             static let search: String = "magnifyingglass"
@@ -44,7 +49,7 @@ struct SearchView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Constants.bodySpacing) {
             searchBar
             bodyView
         }
@@ -58,9 +63,9 @@ extension SearchView {
     private var searchBar: some View {
         HStack {
             ZStack {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Constants.searchBarCornerRadius)
                     .fill(Constants.Colors.lightGray)
-                    .frame(height: 36)
+                    .frame(height: Constants.searchBarHeight)
                 HStack(spacing: 0) {
                     Button(action: {
                         isTextFieldFocused.toggle()
@@ -68,10 +73,10 @@ extension SearchView {
                         Image(systemName: Constants.Icons.search)
                     })
                     .foregroundColor(Constants.Colors.darkGray)
-                    .padding(.leading, 8)
+                    .padding(.leading, Constants.searchBarIconsPadding)
                     TextField(Constants.Title.searchBarTitle, text: $viewModel.searchText)
                         .focused($isTextFieldFocused)
-                        .frame(height: 36)
+                        .frame(height: Constants.searchBarHeight)
                     Button(action: {
                         viewModel.searchText = ""
                     }, label: {
@@ -79,18 +84,12 @@ extension SearchView {
                         Image(systemName: Constants.Icons.clear)
                     })
                     .foregroundColor(Constants.Colors.darkGray)
-                    .padding(.trailing, 8)
+                    .padding(.trailing, Constants.searchBarIconsPadding)
                 }
             }
         }
-        .padding(
-            EdgeInsets(
-                top: Constants.topPadding,
-                leading: Constants.horizontalPadding,
-                bottom: Constants.bottomPadding,
-                trailing: Constants.horizontalPadding
-            )
-        )
+        .padding(.horizontal, Constants.horizontalPadding)
+        .padding(.top, Constants.topPadding)
     }
 
     @ViewBuilder
@@ -106,7 +105,7 @@ extension SearchView {
         } else if !viewModel.results.isEmpty {
             ScrollView {
                 VerticalListSection(meals: viewModel.results)
-                    .padding(.bottom, 32)
+                    .padding(.bottom, 41)
             }
         } else {
             Spacer()
