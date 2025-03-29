@@ -3,12 +3,20 @@ import Foundation
 final class FavoriteViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
     let title = "Favourites"
+
+    // MARK: - Private properties
+
     private let favoritesManager: FavoritesManagerInterface
+
+    // MARK: - Lifecycle
 
     init(favoritesManager: FavoritesManagerInterface = FavoritesManager()) {
         self.favoritesManager = favoritesManager
+        populateFavoritesIfNeeded()
         loadMockData()
     }
+
+    // MARK: Public methods
 
     func toggleFavorite(for recipe: Recipe) {
         guard let index = recipes.firstIndex(of: recipe) else { return }
@@ -20,6 +28,17 @@ final class FavoriteViewModel: ObservableObject {
         }
 
         recipes[index].isFavorite.toggle()
+    }
+
+    func onAppear() {
+        loadMockData()
+    }
+
+    // MARK: - Private methods
+
+    private func populateFavoritesIfNeeded() {
+        let allMockIDs = Array(0...11)
+        favoritesManager.populateInitialFavorites(with: allMockIDs)
     }
 
     private func loadMockData() {
@@ -38,10 +57,12 @@ final class FavoriteViewModel: ObservableObject {
             Recipe(id: 9, name: "Паста Карбонара 10", imageName: "caesar"),
             Recipe(id: 10, name: "Пицца Маргарита 11", imageName: "caesar"),
             Recipe(id: 11, name: "Салат Цезарь 12", imageName: "caesar")
-        ].map { recipe in
-            var modified = recipe
-            modified.isFavorite = favoriteIDs.contains(recipe.id)
-            return modified
-        }
+        ]
+            .filter { favoriteIDs.contains($0.id) }
+            .map { recipe in
+                var modified = recipe
+                modified.isFavorite = favoriteIDs.contains(recipe.id)
+                return modified
+            }
     }
 }

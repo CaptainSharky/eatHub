@@ -43,6 +43,12 @@ extension FavoritesManager: FavoritesManagerInterface {
         userDefaults.array(forKey: favoritesKey) as? [Int] ?? []
     }
 
+    func populateInitialFavorites(with ids: [Int]) {
+        var current = Set(allFavorites())
+        ids.forEach { current.insert($0) }
+        save(Array(current))
+    }
+
     // MARK: - Private functions
 
     private func save(_ ids: [Int]) {
