@@ -6,7 +6,7 @@ configs:
   Release: release 
 settings:
   SDKROOT: iphoneos                     
-  IPHONEOS_DEPLOYMENT_TARGET: "17.5"    
+  IPHONEOS_DEPLOYMENT_TARGET: "18.0"    
 
 targets:
   EatHub:

@@ -27,6 +27,8 @@ struct MainView: View {
                     .tag(MainTabEnum.home)
                 SearchView(viewModel: viewModel.searchViewModel)
                     .tag(MainTabEnum.search)
+                FavoriteView(viewModel: viewModel.favoriteViewModel)
+                    .tag(MainTabEnum.favorites)
             }
 
             VStack(spacing: 0) {

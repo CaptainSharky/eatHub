@@ -11,15 +11,18 @@ struct HorizontalItemView: View {
 
     var body: some View {
         ZStack {
-            AsyncImage(url: URL(string: meal.thumbnail ?? "")) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Color.gray.opacity(0.3)
+            if let url = URL(string: meal.thumbnail ?? "") {
+                CachedAsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    Color.gray.opacity(0.3)
+                }
+                .frame(width: 150, height: 150)
+                .clipped()
+                .cornerRadius(35)
             }
-            .frame(width: 150, height: 150)
-            .clipped()
-            .cornerRadius(35)
-
             VStack {
                 Spacer()
                 Text(meal.name)

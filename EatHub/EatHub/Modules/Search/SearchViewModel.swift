@@ -46,7 +46,6 @@ final class SearchViewModel: ObservableObject {
     func search() {
         state = .idle
         print("search() запущен с запросом: '\(searchText)'")
-
         mealService.searchMeal(name: searchText)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in

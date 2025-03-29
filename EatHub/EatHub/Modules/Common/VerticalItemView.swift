@@ -11,15 +11,18 @@ struct VerticalItemView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: meal.thumbnail ?? "")) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Color.gray.opacity(0.3)
+            if let url = URL(string: meal.thumbnail ?? "") {
+                CachedAsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    Color.gray.opacity(0.3)
+                }
+                .frame(width: 100, height: 100)
+                .clipped()
+                .cornerRadius(20)
             }
-            .frame(width: 100, height: 100)
-            .clipped()
-            .cornerRadius(20)
-
             VStack(alignment: .leading, spacing: 4) {
                 Text(meal.name).font(.headline)
                 if let category = meal.category {
