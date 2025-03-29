@@ -8,7 +8,7 @@ import SwiftUI
 
 struct HorizontalItemView: View {
     let meal: Meal
-    
+
     var body: some View {
         ZStack {
             AsyncImage(url: URL(string: meal.thumbnail ?? "")) { image in
@@ -19,7 +19,7 @@ struct HorizontalItemView: View {
             .frame(width: 150, height: 150)
             .clipped()
             .cornerRadius(35)
-            
+
             VStack {
                 Spacer()
                 Text(meal.name)
@@ -39,5 +39,3 @@ struct HorizontalItemView: View {
         }
     }
 }
-
-

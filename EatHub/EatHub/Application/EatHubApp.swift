@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct EatHubApp: App {
+
+    private let dependencies = AppDependencies()
+
     var body: some Scene {
         WindowGroup {
-            MainView()
+            MainView(viewModel: dependencies.mainViewModel)
         }
     }
 }
