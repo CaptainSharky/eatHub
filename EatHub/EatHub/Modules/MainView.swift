@@ -1,8 +1,8 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  EatHub
 //
-//  Created by Kirill Prokofyev on 25.03.2025.
+//  Created by anastasiia talmazan on 25.03.2025.
 //
 
 import SwiftUI
@@ -13,7 +13,7 @@ struct MainView: View {
     @State var selectedIndex: MainTabEnum = .home
 
     // MARK: - ViewModel
-    let viewModel: MainViewModel
+    @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
         ZStack {

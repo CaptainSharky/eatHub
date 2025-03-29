@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FavoriteView: View {
-    @StateObject private var viewModel = FavoriteViewModel()
+    @ObservedObject private var viewModel = FavoriteViewModel()
 
     var body: some View {
         NavigationView {

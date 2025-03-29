@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchView: View {
 
     // MARK: - ViewModel
-    @State var viewModel: SearchViewModel
+    @ObservedObject var viewModel: SearchViewModel
 
     // MARK: - UI properties
     @FocusState var isTextFieldFocused: Bool
@@ -47,7 +47,6 @@ struct SearchView: View {
         VStack(spacing: 0) {
             searchBar
             bodyView
-            VerticalListSection(meals: viewModel.results)
         }
         .frame(maxWidth: .infinity)
     }
@@ -76,6 +75,7 @@ extension SearchView {
                     Button(action: {
                         viewModel.searchText = ""
                     }, label: {
+                        // TODO: - разобраться почему не сразу стирает, а только после сабмита после нажатия
                         Image(systemName: Constants.Icons.clear)
                     })
                     .foregroundColor(Constants.Colors.darkGray)
@@ -95,29 +95,22 @@ extension SearchView {
 
     @ViewBuilder
     private var bodyView: some View {
-        if viewModel.isLoading {
-            Spacer()
-            ProgressView()
-            Spacer()
-        } else if let error = viewModel.errorMessage {
+        if let error = viewModel.errorMessage {
             Spacer()
             Text(Constants.Title.errorMessage(error))
             Spacer()
-        } else if viewModel.results.isEmpty && !viewModel.searchText.isEmpty {
-            Spacer()
-            Text(Constants.Title.emptyResultsTitle)
-            Spacer()
-        } else if viewModel.results.isEmpty {
+        } else if viewModel.searchText.isEmpty {
             Spacer()
             Text(Constants.Title.startTitle)
             Spacer()
-        } else {
+        } else if !viewModel.results.isEmpty {
             ScrollView {
-                Spacer()
-                // TODO: отображение результатов поиска из вью модельки
-                Text("Тут результаты")
-                Spacer()
+                VerticalListSection(meals: viewModel.results)
             }
+        } else {
+            Spacer()
+            Text(Constants.Title.emptyResultsTitle)
+            Spacer()
         }
     }
 }
