@@ -11,6 +11,7 @@ struct AppDependencies {
 
     let mealsService: MealsService
     let detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
+    let launchScreenStateManager: LaunchScreenStateManager
 
     init() {
         let apiRequester = APIRequester()
@@ -26,6 +27,7 @@ struct AppDependencies {
             )
         }
         self.detailsViewModelBuilder = detailsViewModelBuilder
+        self.launchScreenStateManager = LaunchScreenStateManager()
     }
 
     func makeHomeViewModel() -> HomeViewModel {
