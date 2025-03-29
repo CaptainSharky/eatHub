@@ -20,7 +20,7 @@ jobs:
           
         - uses: xavierLowmiller/xcodegen-action@1.2.4
           with:
-            spec: project.yaml
+            spec: project.yml
             quiet: true
             version: '2.17.0'
 
