@@ -1,5 +1,5 @@
 //
-//  OnAppearOnceModifier.swift
+//  View+onFirstAppear.swift
 //  EatHub
 //
 //  Created by Даниил Дементьев on 27.03.2025.
