@@ -31,9 +31,12 @@ extension MealsService: MealsServiceInterface {
             .eraseToAnyPublisher()
     }
 
-    func fetchMeal(id: String) -> AnyPublisher<Meal, Error> {
+    func fetchMeal(id: String) -> AnyPublisher<Meal?, Error> {
         requester.lookupMeal(id: id)
-            .map { $0.mapToMeal() }
+            .compactMap {
+                guard let meal = $0.meals.first else { return nil }
+                return meal.mapToMeal()
+            }
             .eraseToAnyPublisher()
     }
 

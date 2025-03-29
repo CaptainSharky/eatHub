@@ -13,7 +13,7 @@ struct DetailsView: View {
         static let closeIconSize: CGFloat = 32
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
-        static let imageHeight: CGFloat = 250
+        static let imageHeight: CGFloat = 200
         static let spacing: CGFloat = 16
 
         enum Icons {
@@ -31,78 +31,47 @@ struct DetailsView: View {
     }
 
     @ObservedObject var viewModel: DetailsViewModel
+    let onClose: (() -> Void)?
+    let namespace: Namespace.ID
 
-    @Environment(\.dismiss) private var dismiss
-
-    init(viewModel: DetailsViewModel) {
-        self.viewModel = viewModel
-    }
-
-    public var body: some View {
-        ZStack(alignment: .topTrailing) {
+    var body: some View {
+        Group {
             ScrollView {
                 VStack(alignment: .leading, spacing: Constants.spacing) {
-                    makeMealImage()
-                    infoSection
+                    VerticalItemView(
+                        viewModel: viewModel.verticalItemViewModel,
+                        namespace: namespace
+                    )
+                    .matchedGeometryEffect(
+                        id: MatchedGeometryEffectIdentifier(.info, for: viewModel.id),
+                        in: namespace
+                    )
                     makeTagsChipsScrollView()
                     ingredientsSection
                     instructionsSection
                 }
             }
-            .scrollBounceBehavior(.basedOnSize)
             .ignoresSafeArea(edges: .top)
-
-            closeButton
+        }
+        .background(Color(.systemBackground))
+        .onFirstAppear {
+            viewModel.fetchMeal()
+        }
+        .overlay(
+            makeCloseButton()
                 .padding(.trailing, Constants.spacing)
-        }
+                .padding(.top, Constants.spacing)
+                .transaction { transaction in
+                    transaction.animation = nil
+                },
+            alignment: .topTrailing
+        )
     }
+}
 
-    // MARK: - Subviews
-
-    private var closeButton: some View {
-        Button(action: {
-            dismiss()
-        }) {
-            Image(systemName: Constants.Icons.close)
-                .resizable()
-                .frame(
-                    width: Constants.closeIconSize,
-                    height: Constants.closeIconSize
-                )
-                .foregroundColor(.secondary)
-                .background(Color.white.clipShape(Circle()))
-        }
-    }
-
-    private var infoSection: some View {
-        VStack(alignment: .leading, spacing: Constants.spacing) {
-            Text(viewModel.title)
-                .font(.title)
-                .bold()
-
-            HStack {
-                makeCategoryIfNeeded()
-                makeAreaIfNeeded()
-            }
-        }
-        .padding(.horizontal, Constants.horizontalPadding)
-    }
-
+private extension DetailsView {
     @ViewBuilder
-    private func makeMealImage() -> some View {
-        viewModel.image
-            .resizable()
-            .scaledToFill()
-            .frame(height: Constants.imageHeight)
-            .clipped()
-            .cornerRadius(
-                Constants.imageCornerRadius,
-                corners: [.bottomLeft, .bottomRight]
-            )
-    }
-
-    @ViewBuilder
-    private func makeTagsChipsScrollView() -> some View {
+    func makeTagsChipsScrollView() -> some View {
         if !viewModel.tagsChips.isEmpty {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: Constants.chipSpacing) {
@@ -115,7 +84,7 @@ struct DetailsView: View {
         }
     }
 
-    private var ingredientsSection: some View {
+    var ingredientsSection: some View {
         Group {
             if !viewModel.ingredients.isEmpty {
                 VStack(alignment: .leading, spacing: Constants.spacing) {
@@ -139,7 +108,7 @@ struct DetailsView: View {
         }
     }
 
-    private var instructionsSection: some View {
+    var instructionsSection: some View {
         Group {
             if let instructions = viewModel.instructions {
                 VStack {
@@ -152,7 +121,23 @@ struct DetailsView: View {
     }
 
     @ViewBuilder
-    private func makeInstructionsContent(instructions: String) -> some View {
+    func makeCloseButton() -> some View {
+        if !viewModel.isCloseButtonHidden {
+            Button(action: { onClose?() }) {
+                Image(systemName: Constants.Icons.close)
+                    .resizable()
+                    .frame(
+                        width: Constants.closeIconSize,
+                        height: Constants.closeIconSize
+                    )
+                    .foregroundColor(.secondary)
+                    .background(Color.white.clipShape(Circle()))
+            }
+        }
+    }
+
+    @ViewBuilder
+    func makeInstructionsContent(instructions: String) -> some View {
         VStack(alignment: .leading, spacing: Constants.spacing) {
             Text(Constants.Title.instructions)
                 .font(.headline)
@@ -174,7 +159,7 @@ struct DetailsView: View {
     }
 
     @ViewBuilder
-    private func makeYoutubeLink(url: URL) -> some View {
+    func makeYoutubeLink(url: URL) -> some View {
         Link(destination: url) {
             HStack {
                 Image(systemName: Constants.Icons.youtube)
@@ -188,35 +173,20 @@ struct DetailsView: View {
             .cornerRadius(Constants.spacing)
         }
     }
-
-    // MARK: - Reusable Helpers
-
-    @ViewBuilder
-    private func makeCategoryIfNeeded() -> some View {
-        if let category = viewModel.category {
-            Label(category, systemImage: Constants.Icons.category)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-    }
-
-    @ViewBuilder
-    private func makeAreaIfNeeded() -> some View {
-        if let area = viewModel.area {
-            Label(area, systemImage: Constants.Icons.area)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-    }
 }
 
 // MARK: - Preview
 
 #Preview("Meal Details") {
+    @Previewable @Namespace var namespace
+    let requester = APIRequester()
+    let mealsService = MealsService(requester: requester)
+
     NavigationView {
         DetailsView(
             viewModel: DetailsViewModel(
-                title: "Beetroot Soup",
+                id: "1",
+                name: "Beetroot Soup",
                 category: "Soup",
                 area: "Polish",
                 tagsChips: [
@@ -235,8 +205,11 @@ struct DetailsView: View {
                     Ingredient(name: "Crocodilo", measure: "1 pcs"),
                     Ingredient(name: "Kadilo", measure: "33 pcs")
                 ],
-                youtubeURL: URL(string: "example.com")
-            )
+                youtubeURL: URL(string: "example.com"),
+                mealsService: mealsService
+            ),
+            onClose: nil,
+            namespace: namespace
         )
     }
 }

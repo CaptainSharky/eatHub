@@ -15,11 +15,17 @@ final class SearchViewModel: ObservableObject {
     // TODO: написать обработчик ошибок (возможно в localizable)
     @Published var errorMessage: String?
 
+    var detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
+
     private let mealService: MealsServiceInterface
     private var debouncer: Debouncer?
     private var cancellables = Set<AnyCancellable>()
 
-    init(mealService: MealsServiceInterface) {
+    init(
+        detailsViewModelBuilder: @escaping ((DetailsViewModuleInput) -> DetailsViewModel),
+        mealService: MealsServiceInterface
+    ) {
+        self.detailsViewModelBuilder = detailsViewModelBuilder
         self.mealService = mealService
         self.debouncer = Debouncer(timeInterval: 1, handler: { [weak self] in
             self?.search()

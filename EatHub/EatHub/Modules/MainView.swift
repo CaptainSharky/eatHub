@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct MainView: View {
-
     // MARK: - Properties
+
     @State var selectedIndex: MainTabEnum = .home
 
     // MARK: - ViewModel
+
     @ObservedObject var viewModel: MainViewModel
 
     init(viewModel: MainViewModel) {
@@ -38,6 +39,8 @@ struct MainView: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     let dependencies = AppDependencies()

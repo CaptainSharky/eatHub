@@ -29,6 +29,7 @@ extension MealItemResponseModel {
             category: self.strCategory,
             instructions: self.strInstructions,
             thumbnail: self.strMealThumb,
+            area: self.strArea,
             tags: self.strTags,
             youtube: self.strYoutube,
             ingredients: self.ingredients.compactMap {

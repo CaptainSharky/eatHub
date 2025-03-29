@@ -17,13 +17,34 @@ struct AppDependencies {
 
     init() {
         let apiRequester = APIRequester()
-        self.mealsService = MealsService(requester: apiRequester)
+        let mealsService = MealsService(requester: apiRequester)
+        self.mealsService = mealsService
 
-        self.homeViewModel = HomeViewModel(mealsService: mealsService)
-        self.searchViewModel = SearchViewModel(mealService: mealsService)
-        self.favoriteViewModel = FavoriteViewModel()
+        let detailsViewModelBuilder: ((DetailsViewModuleInput) -> DetailsViewModel) = { input in
+            DetailsViewModel(
+                id: input.id,
+                name: input.name,
+                thumbnail: input.thumbnail,
+                mealsService: mealsService
+            )
+        }
 
-        self.mainViewModel = MainViewModel(
+        let homeViewModel = HomeViewModel(
+            detailsViewModelBuilder: detailsViewModelBuilder,
+            mealsService: mealsService
+        )
+        self.homeViewModel = homeViewModel
+
+        let searchViewModel = SearchViewModel(
+            detailsViewModelBuilder: detailsViewModelBuilder,
+            mealService: mealsService
+        )
+        self.searchViewModel = searchViewModel
+
+        let favoriteViewModel = FavoriteViewModel()
+        self.favoriteViewModel = favoriteViewModel
+
+        mainViewModel = MainViewModel(
             homeViewModel: homeViewModel,
             searchViewModel: searchViewModel,
             favoriteViewModel: favoriteViewModel

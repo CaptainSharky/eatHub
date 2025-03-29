@@ -25,7 +25,10 @@ final class APIRequester {
 
     // MARK: Private methods
 
-    private func request<T: Decodable>(target: APIProvider, type: T.Type) -> AnyPublisher<T, Error> {
+    private func request<T: Decodable>(
+        target: APIProvider,
+        type: T.Type
+    ) -> AnyPublisher<T, Error> {
         guard let request = target.urlRequest else {
             return Fail(error: URLError(.badURL))
                 .eraseToAnyPublisher()
@@ -56,10 +59,10 @@ extension APIRequester: Requestable {
         )
     }
 
-    func lookupMeal(id: String) -> AnyPublisher<MealItemResponseModel, Error> {
+    func lookupMeal(id: String) -> AnyPublisher<MealsResponseModel, Error> {
         request(
             target: .mealDetails(id: id),
-            type: MealItemResponseModel.self
+            type: MealsResponseModel.self
         )
     }
 

@@ -13,14 +13,21 @@ final class HomeViewModel: ObservableObject {
     @Published var verticalMeals: [Meal] = []
     @Published var errorMessage: String?
 
+    var detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
+
     private let mealsService: MealsServiceInterface
     private var cancellables = Set<AnyCancellable>()
 
-    init(mealsService: MealsServiceInterface) {
+    init(
+        detailsViewModelBuilder: @escaping ((DetailsViewModuleInput) -> DetailsViewModel),
+        mealsService: MealsServiceInterface
+    ) {
         self.mealsService = mealsService
+        self.detailsViewModelBuilder = detailsViewModelBuilder
     }
 
     func fetchMeals() {
+        cancellables.removeAll()
         errorMessage = nil
 
         mealsService.fetchLatestMeals()
