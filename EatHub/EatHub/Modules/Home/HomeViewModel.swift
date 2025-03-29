@@ -1,5 +1,5 @@
 //
-//  MainViewModal.swift
+//  HomeViewModal.swift
 //  EatHub
 //
 //  Created by Даниил Дементьев on 26.03.2025.

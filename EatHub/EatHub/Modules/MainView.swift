@@ -15,6 +15,8 @@ struct MainView: View {
     // MARK: - ViewModel
     @ObservedObject var viewModel: MainViewModel
 
+    @EnvironmentObject private var launchScreenState: LaunchScreenStateManager
+
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
         UITabBar.appearance().isHidden = true
@@ -36,10 +38,15 @@ struct MainView: View {
                 MainTabBar(selectedIndex: $selectedIndex)
             }
         }
+        .task {
+            try? await Task.sleep(for: .seconds(2))
+            launchScreenState.dismiss()
+        }
     }
 }
 
 #Preview {
     let dependencies = AppDependencies()
     return MainView(viewModel: dependencies.mainViewModel)
+        .environmentObject(LaunchScreenStateManager())
 }
