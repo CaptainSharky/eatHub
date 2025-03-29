@@ -9,11 +9,17 @@ import SwiftUI
 import Combine
 
 final class SearchViewModel: ObservableObject {
+
+    enum State {
+        case idle
+        case emptyResults
+        case resultsLoaded([Meal])
+        case error(Error)
+    }
+
     @Published var searchText: String = ""
     @Published var results: [Meal] = []
-
-    // TODO: написать обработчик ошибок (возможно в localizable)
-    @Published var errorMessage: String?
+    @Published var state: State = .idle
 
     private let mealService: MealsServiceInterface
     private var debouncer: Debouncer?
@@ -28,28 +34,30 @@ final class SearchViewModel: ObservableObject {
         $searchText
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newText in
-                guard !newText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                self?.errorMessage = nil
+                guard !newText.trimmingCharacters(in: .whitespaces).isEmpty else {
+                    self?.state = .idle
+                    return
+                }
                 self?.debouncer?.renewInterval()
             }
             .store(in: &cancellables)
     }
 
     func search() {
+        state = .idle
         print("search() запущен с запросом: '\(searchText)'")
-
-        errorMessage = nil
 
         mealService.searchMeal(name: searchText)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
-                    self?.errorMessage = error.localizedDescription
+                    self?.state = .error(error)
                     print("Ошибка при поиске: \(error.localizedDescription)")
                 }
             }, receiveValue: { [weak self] meals in
-                let limitedMeals = Array(meals.prefix(10))
+                let limitedMeals = Array(meals.prefix(15))
                 self?.results = limitedMeals
+                self?.state = limitedMeals.isEmpty ? .emptyResults : .resultsLoaded(limitedMeals)
             })
             .store(in: &cancellables)
     }

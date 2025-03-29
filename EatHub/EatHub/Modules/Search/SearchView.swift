@@ -35,9 +35,7 @@ struct SearchView: View {
         // TODO: подумать над тайтлами
         enum Title {
             static let searchBarTitle: String = "Что хотите найти?"
-            static func errorMessage(_ text: String) -> String {
-                "Ошибка: \(text)"
-            }
+            static let errorMessage: String = "Возникла ошибка. Повторите позже"
             static let emptyResultsTitle: String = "Не нашлось рецептов по вашему запросу"
             static let startTitle: String = "Что будем готовить?"
         }
@@ -94,23 +92,24 @@ extension SearchView {
 
     @ViewBuilder
     private var bodyView: some View {
-        if let error = viewModel.errorMessage {
-            Spacer()
-            Text(Constants.Title.errorMessage(error))
-            Spacer()
-        } else if viewModel.searchText.isEmpty {
-            Spacer()
-            Text(Constants.Title.startTitle)
-            Spacer()
-        } else if !viewModel.results.isEmpty {
-            ScrollView {
-                VerticalListSection(meals: viewModel.results)
-                    .padding(.bottom, 41)
-            }
-        } else {
-            Spacer()
-            Text(Constants.Title.emptyResultsTitle)
-            Spacer()
+        switch viewModel.state {
+            case .idle:
+                Spacer()
+                Text(Constants.Title.startTitle)
+                Spacer()
+            case .error:
+                Spacer()
+                Text(Constants.Title.errorMessage)
+                Spacer()
+            case .emptyResults:
+                Spacer()
+                Text(Constants.Title.emptyResultsTitle)
+                Spacer()
+            case .resultsLoaded:
+                ScrollView {
+                    VerticalListSection(meals: viewModel.results)
+                        .padding(.bottom, 41)
+                }
         }
     }
 }

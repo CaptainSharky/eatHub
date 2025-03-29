@@ -41,7 +41,18 @@ final class APIRequester {
                 }
                 return data
             }
-            .decode(type: T.self, decoder: JSONDecoder())
+            .tryMap { data in
+                let decoder = JSONDecoder()
+                do {
+                    return try decoder.decode(T.self, from: data)
+                } catch {
+                    if let mealsWrapper = try? decoder.decode(MealsResponseModel.self, from: data),
+                       let result = mealsWrapper as? T {
+                        return result
+                    }
+                    throw error
+                }
+            }
             .eraseToAnyPublisher()
     }
 }
