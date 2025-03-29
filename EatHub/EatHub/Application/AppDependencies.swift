@@ -8,7 +8,6 @@
 import Foundation
 
 struct AppDependencies {
-    let apiRequester: APIRequester
     let mealsService: MealsService
 
     let homeViewModel: HomeViewModel
@@ -16,7 +15,7 @@ struct AppDependencies {
     let mainViewModel: MainViewModel
 
     init() {
-        self.apiRequester = APIRequester()
+        let apiRequester = APIRequester()
         self.mealsService = MealsService(requester: apiRequester)
 
         self.homeViewModel = HomeViewModel(mealsService: mealsService)

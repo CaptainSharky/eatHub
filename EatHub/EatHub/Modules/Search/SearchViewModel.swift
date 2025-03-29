@@ -21,7 +21,7 @@ final class SearchViewModel: ObservableObject {
 
     init(mealService: MealsServiceInterface) {
         self.mealService = mealService
-        self.debouncer = Debouncer(timeInterval: 0.5, handler: { [weak self] in
+        self.debouncer = Debouncer(timeInterval: 1, handler: { [weak self] in
 //            print("debounce сработал, вызываем search()")
             self?.search()
         })

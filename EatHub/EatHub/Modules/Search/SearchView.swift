@@ -44,7 +44,7 @@ struct SearchView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 16) {
             searchBar
             bodyView
         }
@@ -106,6 +106,7 @@ extension SearchView {
         } else if !viewModel.results.isEmpty {
             ScrollView {
                 VerticalListSection(meals: viewModel.results)
+                    .padding(.bottom, 32)
             }
         } else {
             Spacer()

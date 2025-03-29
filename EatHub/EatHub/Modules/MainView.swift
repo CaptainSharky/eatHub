@@ -15,6 +15,11 @@ struct MainView: View {
     // MARK: - ViewModel
     @ObservedObject var viewModel: MainViewModel
 
+    init(viewModel: MainViewModel) {
+        self.viewModel = viewModel
+        UITabBar.appearance().isHidden = true
+    }
+
     var body: some View {
         ZStack {
             TabView(selection: $selectedIndex) {
