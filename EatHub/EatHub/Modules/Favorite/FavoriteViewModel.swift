@@ -1,32 +1,59 @@
 import Foundation
+import Combine
 
-class FavoriteViewModel: ObservableObject {
-    @Published var recipes: [Recipe] = []
+final class FavoriteViewModel: ObservableObject {
+    @Published var likedRecipes: [RecipeViewModel] = []
+    var recipesIdentifiers: [String] = []
+
     let title = "Favourites"
 
-    init() {
-        loadMockData()
+    private let favoritesManager: FavoritesManagerInterface
+    private let mealsService: MealsServiceInterface
+    private var cancellables = Set<AnyCancellable>()
+
+    init(favoritesManager: FavoritesManagerInterface, mealsService: MealsServiceInterface) {
+        self.favoritesManager = favoritesManager
+        self.mealsService = mealsService
+
+        // убрать
+        favoritesManager.populateInitialFavorites(with: ["52943", "52869", "52883", "52823"])
     }
 
-    func toggleFavorite(for recipe: Recipe) {
-        guard let index = recipes.firstIndex(of: recipe) else { return }
-        recipes[index].isFavorite.toggle()
+    func toggleFavorite(for recipe: RecipeViewModel) {
+        if recipe.isFavorite {
+            favoritesManager.remove(recipeID: recipe.id)
+        } else {
+            favoritesManager.add(recipeID: recipe.id)
+        }
+
+        recipe.isFavorite.toggle()
     }
 
-    private func loadMockData() {
-        recipes = [
-            Recipe(id: 0, name: "Паста Карбонара", imageName: "caesar"),
-            Recipe(id: 1, name: "Пицца Маргарита", imageName: "caesar"),
-            Recipe(id: 2, name: "Салат Цезарь", imageName: "caesar"),
-            Recipe(id: 3, name: "Паста Карбонара", imageName: "caesar"),
-            Recipe(id: 4, name: "Пицца Маргарита", imageName: "caesar"),
-            Recipe(id: 5, name: "Салат Цезарь", imageName: "caesar"),
-            Recipe(id: 6, name: "Паста Карбонара", imageName: "caesar"),
-            Recipe(id: 7, name: "Пицца Маргарита", imageName: "caesar"),
-            Recipe(id: 8, name: "Салат Цезарь", imageName: "caesar"),
-            Recipe(id: 9, name: "Паста Карбонара", imageName: "caesar"),
-            Recipe(id: 10, name: "Пицца Маргарита", imageName: "caesar"),
-            Recipe(id: 11, name: "Салат Цезарь", imageName: "caesar")
-        ]
+    func refreshFavorites() {
+        cancellables.removeAll()
+
+        let currentFavoriteIDs = Set(favoritesManager.allFavorites())
+
+        likedRecipes.removeAll { !currentFavoriteIDs.contains($0.id) }
+
+        let existingIDs = Set(likedRecipes.map { $0.id })
+        let newIDs = currentFavoriteIDs.subtracting(existingIDs)
+
+        loadNewRecipes(ids: Array(newIDs))
+    }
+
+    private func loadNewRecipes(ids: [String]) {
+        cancellables.removeAll()
+
+        for id in ids {
+            mealsService.fetchMeal(id: id)
+                .receive(on: DispatchQueue.main)
+                .sink { _ in } receiveValue: { [weak self] meal in
+                    if let recipe = meal?.mapToRecipe() {
+                        self?.likedRecipes.append(recipe)
+                    }
+                }
+                .store(in: &cancellables)
+        }
     }
 }
