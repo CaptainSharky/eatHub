@@ -21,7 +21,7 @@ final class FavoritesManager {
 
 extension FavoritesManager: FavoritesManagerInterface {
     // MARK: - FavoritesManagerInterface
-    
+
     func add(recipeID: Int) {
         var current = allFavorites()
         guard !current.contains(recipeID) else { return }
@@ -31,7 +31,7 @@ extension FavoritesManager: FavoritesManagerInterface {
 
     func remove(recipeID: Int) {
         var current = allFavorites()
-        current.removeAll() { $0 == recipeID }
+        current.removeAll { $0 == recipeID }
         save(current)
     }
 
