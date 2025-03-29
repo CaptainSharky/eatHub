@@ -13,9 +13,14 @@ struct FavoriteView: View {
             }
             .background(Color(.systemGroupedBackground))
             .navigationBarHidden(true)
+            .onAppear {
+                viewModel.onAppear()
+            }
         }
     }
-    
+
+    // MARK: - Private properties
+
     private var favoritesTitle: some View {
         Text(viewModel.title)
             .font(.largeTitle)
