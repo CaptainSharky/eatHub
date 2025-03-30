@@ -9,7 +9,7 @@ import Foundation
 
 public typealias Action = () -> Void
 
-public final class Debouncer {
+final class Debouncer {
 
     // MARK: - Private properties
 
@@ -36,9 +36,7 @@ public final class Debouncer {
             withTimeInterval: timeInterval,
             repeats: false,
             block: { [weak self] timer in
-                guard let self else { return }
-
-                timeIntervalDidFinish(for: timer)
+                self?.timeIntervalDidFinish(for: timer)
             }
         )
     }

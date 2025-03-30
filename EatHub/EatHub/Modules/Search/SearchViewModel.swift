@@ -10,6 +10,11 @@ import Combine
 
 final class SearchViewModel: ObservableObject {
 
+    private enum Constants {
+        static let debounceInterval: TimeInterval = 1
+        static let limitCount: Int = 15
+    }
+
     enum State {
         case idle
         case emptyResults
@@ -27,9 +32,12 @@ final class SearchViewModel: ObservableObject {
 
     init(mealService: MealsServiceInterface) {
         self.mealService = mealService
-        self.debouncer = Debouncer(timeInterval: 1, handler: { [weak self] in
-            self?.search()
-        })
+        self.debouncer = Debouncer(
+            timeInterval: Constants.debounceInterval,
+            handler: { [weak self] in
+                self?.search()
+            }
+        )
 
         $searchText
             .receive(on: DispatchQueue.main)
@@ -45,16 +53,14 @@ final class SearchViewModel: ObservableObject {
 
     func search() {
         state = .idle
-        print("search() запущен с запросом: '\(searchText)'")
         mealService.searchMeal(name: searchText)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
                     self?.state = .error(error)
-                    print("Ошибка при поиске: \(error.localizedDescription)")
                 }
             }, receiveValue: { [weak self] meals in
-                let limitedMeals = Array(meals.prefix(15))
+                let limitedMeals = Array(meals.prefix(Constants.limitCount))
                 self?.results = limitedMeals
                 self?.state = limitedMeals.isEmpty ? .emptyResults : .resultsLoaded(limitedMeals)
             })

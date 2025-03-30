@@ -7,10 +7,7 @@
 
 extension MealsResponseModel {
     func mapToMealList() -> [Meal] {
-        meals
-            .compactMap {
-                $0.mapToMeal()
-            }
+        meals.compactMap { $0.mapToMeal() }
     }
 }
 

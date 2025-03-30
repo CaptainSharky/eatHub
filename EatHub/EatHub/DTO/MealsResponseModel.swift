@@ -5,7 +5,6 @@
 //  Created by Kirill Prokofyev on 25.03.2025.
 //
 
-
 struct MealsResponseModel: Decodable {
     let meals: [MealItemResponseModel]
 
@@ -19,4 +18,3 @@ struct MealsResponseModel: Decodable {
         case meals
     }
 }
-

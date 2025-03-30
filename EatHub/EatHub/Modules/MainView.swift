@@ -9,25 +9,22 @@ import SwiftUI
 
 struct MainView: View {
 
-    // MARK: - Properties
     @State var selectedIndex: MainTabEnum = .home
+    var dependencies: AppDependencies
 
-    // MARK: - ViewModel
-    @ObservedObject var viewModel: MainViewModel
-
-    init(viewModel: MainViewModel) {
-        self.viewModel = viewModel
+    init(dependencies: AppDependencies) {
+        self.dependencies = dependencies
         UITabBar.appearance().isHidden = true
     }
 
     var body: some View {
         ZStack {
             TabView(selection: $selectedIndex) {
-                HomeView(viewModel: viewModel.homeViewModel)
+                HomeView(viewModel: dependencies.makeHomeViewModel())
                     .tag(MainTabEnum.home)
-                SearchView(viewModel: viewModel.searchViewModel)
+                SearchView(viewModel: dependencies.makeSearchViewModel())
                     .tag(MainTabEnum.search)
-                FavoriteView(viewModel: viewModel.favoriteViewModel)
+                FavoriteView(viewModel: dependencies.makeFavoriteViewModel())
                     .tag(MainTabEnum.favorites)
             }
 
@@ -41,5 +38,5 @@ struct MainView: View {
 
 #Preview {
     let dependencies = AppDependencies()
-    return MainView(viewModel: dependencies.mainViewModel)
+    return MainView(dependencies: dependencies)
 }

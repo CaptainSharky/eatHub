@@ -9,16 +9,10 @@ import SwiftUI
 
 struct SearchView: View {
 
-    // MARK: - ViewModel
     @ObservedObject var viewModel: SearchViewModel
-
-    // MARK: - UI properties
     @FocusState var isTextFieldFocused: Bool
 
-    // MARK: - Constants
     private enum Constants {
-        static let bodySpacing: CGFloat = 16
-
         static let topPadding: CGFloat = 32
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
@@ -47,7 +41,7 @@ struct SearchView: View {
     }
 
     var body: some View {
-        VStack(spacing: Constants.bodySpacing) {
+        VStack(spacing: 0) {
             searchBar
             bodyView
         }
@@ -57,37 +51,45 @@ struct SearchView: View {
 
 extension SearchView {
 
-    // MARK: - View Elements
     private var searchBar: some View {
-        HStack {
-            ZStack {
-                RoundedRectangle(cornerRadius: Constants.searchBarCornerRadius)
-                    .fill(Constants.Colors.lightGray)
-                    .frame(height: Constants.searchBarHeight)
-                HStack(spacing: 0) {
-                    Button(action: {
-                        isTextFieldFocused.toggle()
-                    }, label: {
-                        Image(systemName: Constants.Icons.search)
-                    })
-                    .foregroundColor(Constants.Colors.darkGray)
-                    .padding(.leading, Constants.searchBarIconsPadding)
-                    TextField(Constants.Title.searchBarTitle, text: $viewModel.searchText)
-                        .focused($isTextFieldFocused)
+        VStack {
+            HStack {
+                ZStack {
+                    RoundedRectangle(cornerRadius: Constants.searchBarCornerRadius)
+                        .fill(Constants.Colors.lightGray)
                         .frame(height: Constants.searchBarHeight)
-                    Button(action: {
-                        viewModel.searchText = ""
-                    }, label: {
-                        // TODO: - разобраться почему не сразу стирает, а только после сабмита после нажатия
-                        Image(systemName: Constants.Icons.clear)
-                    })
-                    .foregroundColor(Constants.Colors.darkGray)
-                    .padding(.trailing, Constants.searchBarIconsPadding)
+                    HStack(spacing: 0) {
+                        Button(action: {
+                            isTextFieldFocused.toggle()
+                        }, label: {
+                            Image(systemName: Constants.Icons.search)
+                        })
+                        .foregroundColor(Constants.Colors.darkGray)
+                        .padding(.leading, Constants.searchBarIconsPadding)
+                        TextField(Constants.Title.searchBarTitle, text: $viewModel.searchText)
+                            .focused($isTextFieldFocused)
+                            .frame(height: Constants.searchBarHeight)
+                        Button(action: {
+                            viewModel.searchText = ""
+                        }, label: {
+                            // TODO: - разобраться почему не сразу стирает
+                            Image(systemName: Constants.Icons.clear)
+                        })
+                        .foregroundColor(Constants.Colors.darkGray)
+                        .padding(.trailing, Constants.searchBarIconsPadding)
+                    }
                 }
             }
+            .padding(.horizontal, Constants.horizontalPadding)
+            .padding(.top, Constants.topPadding)
+
+            Rectangle()
+                .fill(.clear)
+                .overlay(
+                    LinearGradient(gradient: Gradient(colors: [.black, .clear]), startPoint: .top, endPoint: .bottom)
+                )
+                .frame(height: 30)
         }
-        .padding(.horizontal, Constants.horizontalPadding)
-        .padding(.top, Constants.topPadding)
     }
 
     @ViewBuilder
@@ -114,7 +116,6 @@ extension SearchView {
     }
 }
 
-// MARK: - Preview
 #Preview {
     let service = MealsService(requester: APIRequester())
     let viewModel = SearchViewModel(mealService: service)
