@@ -54,6 +54,7 @@ disabled_rules:
 - cyclomatic_complexity
 - large_tuple
 - private_over_fileprivate
+- todo
 
 # Opt-in rules configuration
 empty_count: 

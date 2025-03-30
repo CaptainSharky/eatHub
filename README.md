@@ -1,12 +1,11 @@
-# eatHub
+# EatHub
 Sirius 2025 mobile project
 
-<!-- GETTING STARTED -->
 ## Getting started
 
 ### Prerequisites
 * Xcode 15+
-* Swift 6+
+* Swift 5
 * XcodeGen or Homebrew
 
 ### Installation
@@ -18,8 +17,11 @@ Sirius 2025 mobile project
    ```sh
    cd eatHub
    ```
-3. Generate .xcodeproj file with Homebrew
+3. Generate .xcodeproj file with Homebrew for the first time
    ```sh
    sh start.sh --full
    ```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+   or use xcodegen further
+   ```sh
+   xcodegen
+   ```
