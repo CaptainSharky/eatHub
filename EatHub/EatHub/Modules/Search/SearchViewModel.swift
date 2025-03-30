@@ -64,7 +64,8 @@ final class SearchViewModel: ObservableObject {
             }, receiveValue: { [weak self] meals in
                 let limitedMeals = Array(meals.prefix(Constants.limitCount))
                 withAnimation {
-                    self?.state = limitedMeals.isEmpty ? .emptyResults : .resultsLoaded(limitedMeals)
+                    self?.state = limitedMeals.isEmpty ? .emptyResults :
+                        .resultsLoaded(limitedMeals)
                 }
             })
             .store(in: &cancellables)

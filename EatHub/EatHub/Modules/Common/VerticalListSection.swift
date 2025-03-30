@@ -11,7 +11,7 @@ struct VerticalListSection: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            ForEach(Array(meals.enumerated()), id: \.element.id) { index, meal in
+            ForEach(meals, id: \.id) { meal in
                 VerticalItemView(meal: meal)
                     .transition(
                         .asymmetric(
