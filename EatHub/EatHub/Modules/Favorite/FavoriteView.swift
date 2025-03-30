@@ -15,7 +15,7 @@ struct FavoriteView: View {
             .navigationBarHidden(true)
         }
     }
-    
+
     private var favoritesTitle: some View {
         Text(viewModel.title)
             .font(.largeTitle)
