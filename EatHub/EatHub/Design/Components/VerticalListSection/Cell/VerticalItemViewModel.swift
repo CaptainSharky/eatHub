@@ -5,7 +5,6 @@
 //  Created by Kirill Prokofyev on 30.03.2025.
 //
 
-
 import SwiftUI
 
 final class VerticalItemViewModel: ObservableObject {

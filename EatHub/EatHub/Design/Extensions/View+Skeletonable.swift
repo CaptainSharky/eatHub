@@ -16,7 +16,7 @@ public extension View {
                         gradient: Gradient(colors: [
                             Color(.black),
                             Color(.black.withAlphaComponent(0.2)),
-                            Color(.black),
+                            Color(.black)
                         ]),
                         bandSize: 0.5
                     )

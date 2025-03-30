@@ -15,7 +15,7 @@ final class ChipsViewModel: ObservableObject {
 
     public init(
         text: String,
-        backgroundColor: Color = Color("SecondaryColor"),
+        backgroundColor: Color = Color("AccentSecondaryColor"),
         textColor: Color = .white
     ) {
         self.text = text

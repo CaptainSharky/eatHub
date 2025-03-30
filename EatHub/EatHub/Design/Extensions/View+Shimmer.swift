@@ -42,7 +42,7 @@ public struct Shimmer: ViewModifier {
     public static let defaultGradient = Gradient(colors: [
         .black.opacity(0.3), // translucent
         .black, // opaque
-        .black.opacity(0.3), // translucent
+        .black.opacity(0.3) // translucent
     ])
 
     /// The start unit point of our gradient, adjusting for layout direction.

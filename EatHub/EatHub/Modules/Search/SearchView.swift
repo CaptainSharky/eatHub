@@ -16,7 +16,7 @@ struct SearchView: View {
     @FocusState var isTextFieldFocused: Bool
     @Namespace private var animationNamespace
 
-    @State private var selectedMeal: Meal? = nil
+    @State private var selectedMeal: Meal?
     @State private var showDetail: Bool = false
 
     // MARK: - Constants
