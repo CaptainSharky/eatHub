@@ -21,6 +21,10 @@ struct SearchView: View {
         static let searchBarIconsPadding: CGFloat = 8
         static let searchBarCornerRadius: CGFloat = 8
 
+        static let bottomScrollPadding: CGFloat = 41
+
+        static let searchBarShadowHeight: CGFloat = 40
+
         enum Icons {
             static let search: String = "magnifyingglass"
             static let clear: String = "xmark.circle.fill"
@@ -41,7 +45,7 @@ struct SearchView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 16) {
             searchBar
             bodyView
         }
@@ -52,49 +56,35 @@ struct SearchView: View {
 extension SearchView {
 
     private var searchBar: some View {
-        VStack {
-            HStack {
-                ZStack {
-                    RoundedRectangle(cornerRadius: Constants.searchBarCornerRadius)
-                        .fill(Constants.Colors.lightGray)
+        HStack {
+            ZStack {
+                RoundedRectangle(cornerRadius: Constants.searchBarCornerRadius)
+                    .fill(Constants.Colors.lightGray)
+                    .frame(height: Constants.searchBarHeight)
+                HStack(spacing: 0) {
+                    Button(action: {
+                        isTextFieldFocused.toggle()
+                    }, label: {
+                        Image(systemName: Constants.Icons.search)
+                    })
+                    .foregroundColor(Constants.Colors.darkGray)
+                    .padding(.leading, Constants.searchBarIconsPadding)
+                    TextField(Constants.Title.searchBarTitle, text: $viewModel.searchText)
+                        .focused($isTextFieldFocused)
                         .frame(height: Constants.searchBarHeight)
-                    HStack(spacing: 0) {
-                        Button(action: {
-                            isTextFieldFocused.toggle()
-                        }, label: {
-                            Image(systemName: Constants.Icons.search)
-                        })
-                        .foregroundColor(Constants.Colors.darkGray)
-                        .padding(.leading, Constants.searchBarIconsPadding)
-                        TextField(Constants.Title.searchBarTitle, text: $viewModel.searchText)
-                            .focused($isTextFieldFocused)
-                            .frame(height: Constants.searchBarHeight)
-                        Button(action: {
-                            viewModel.searchText = ""
-                        }, label: {
-                            // TODO: - разобраться почему не сразу стирает
-                            Image(systemName: Constants.Icons.clear)
-                        })
-                        .foregroundColor(Constants.Colors.darkGray)
-                        .padding(.trailing, Constants.searchBarIconsPadding)
-                    }
+                    Button(action: {
+                        viewModel.searchText = ""
+                    }, label: {
+                        // TODO: - разобраться почему не сразу стирает
+                        Image(systemName: Constants.Icons.clear)
+                    })
+                    .foregroundColor(Constants.Colors.darkGray)
+                    .padding(.trailing, Constants.searchBarIconsPadding)
                 }
             }
-            .padding(.horizontal, Constants.horizontalPadding)
-            .padding(.top, Constants.topPadding)
-
-            Rectangle()
-                .fill(.clear)
-                .overlay(
-                    LinearGradient(
-                        gradient:
-                            Gradient(colors: [.black, .clear]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .frame(height: 30)
         }
+        .padding(.horizontal, Constants.horizontalPadding)
+        .padding(.top, Constants.topPadding)
     }
 
     @ViewBuilder
@@ -107,10 +97,30 @@ extension SearchView {
             case .emptyResults:
                 centeredMessage(Constants.Title.emptyResultsTitle)
             case .resultsLoaded(let results):
-                ScrollView {
-                    VerticalListSection(meals: results)
-                        .padding(.bottom, 41)
+                ZStack {
+                    ScrollView {
+                        VerticalListSection(meals: results)
+                            .padding(.bottom, Constants.bottomScrollPadding)
+                    }
+                    topShadowToBottom
                 }
+        }
+    }
+
+    private var topShadowToBottom: some View {
+        VStack {
+            Rectangle()
+                .fill(.clear)
+                .overlay(
+                    LinearGradient(
+                        gradient:
+                            Gradient(colors: [.white, .clear]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(height: Constants.searchBarShadowHeight, alignment: .top)
+            Spacer()
         }
     }
 
