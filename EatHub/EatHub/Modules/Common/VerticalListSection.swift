@@ -11,9 +11,16 @@ struct VerticalListSection: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            ForEach(meals, id: \.id) { meal in
+            ForEach(Array(meals.enumerated()), id: \.element.id) { index, meal in
                 VerticalItemView(meal: meal)
+                    .transition(
+                        .asymmetric(
+                            insertion: .move(edge: .top).combined(with: .opacity),
+                            removal: .move(edge: .top).combined(with: .opacity)
+                        )
+                    )
             }
         }
+        .animation(.easeInOut, value: meals)
     }
 }

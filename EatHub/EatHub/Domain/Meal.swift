@@ -5,7 +5,7 @@
 //  Created by Kirill Prokofyev on 25.03.2025.
 //
 
-struct Meal: Identifiable {
+struct Meal: Identifiable, Equatable {
     let id: String
     let name: String
     let category: String?

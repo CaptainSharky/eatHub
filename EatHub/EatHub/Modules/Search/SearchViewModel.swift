@@ -15,11 +15,11 @@ final class SearchViewModel: ObservableObject {
         static let limitCount: Int = 15
     }
 
-    enum State {
+    enum State: Equatable {
         case idle
         case emptyResults
         case resultsLoaded([Meal])
-        case error(Error)
+        case error(String)
     }
 
     @Published var searchText: String = ""
@@ -50,16 +50,22 @@ final class SearchViewModel: ObservableObject {
     }
 
     private func search() {
-        state = .idle
+
+        if searchText.isEmpty {
+            state = .idle
+        }
+
         mealService.searchMeal(name: searchText)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
-                    self?.state = .error(error)
+                    self?.state = .error(error.localizedDescription)
                 }
             }, receiveValue: { [weak self] meals in
                 let limitedMeals = Array(meals.prefix(Constants.limitCount))
-                self?.state = limitedMeals.isEmpty ? .emptyResults : .resultsLoaded(limitedMeals)
+                withAnimation {
+                    self?.state = limitedMeals.isEmpty ? .emptyResults : .resultsLoaded(limitedMeals)
+                }
             })
             .store(in: &cancellables)
     }

@@ -100,8 +100,11 @@ extension SearchView {
                 ZStack {
                     ScrollView {
                         VerticalListSection(meals: results)
+                            .id(results.map(\.id).joined()) // делаем список "объектом"
                             .padding(.bottom, Constants.bottomScrollPadding)
                     }
+                    .transition(.opacity)
+                    .animation(.easeInOut, value: results)
                     topShadowToBottom
                 }
         }
