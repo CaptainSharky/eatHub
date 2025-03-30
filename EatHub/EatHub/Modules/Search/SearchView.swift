@@ -86,7 +86,12 @@ extension SearchView {
             Rectangle()
                 .fill(.clear)
                 .overlay(
-                    LinearGradient(gradient: Gradient(colors: [.black, .clear]), startPoint: .top, endPoint: .bottom)
+                    LinearGradient(
+                        gradient:
+                            Gradient(colors: [.black, .clear]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 )
                 .frame(height: 30)
         }
@@ -96,22 +101,24 @@ extension SearchView {
     private var bodyView: some View {
         switch viewModel.state {
             case .idle:
-                Spacer()
-                Text(Constants.Title.startTitle)
-                Spacer()
+                centeredMessage(Constants.Title.startTitle)
             case .error:
-                Spacer()
-                Text(Constants.Title.errorMessage)
-                Spacer()
+                centeredMessage(Constants.Title.errorMessage)
             case .emptyResults:
-                Spacer()
-                Text(Constants.Title.emptyResultsTitle)
-                Spacer()
-            case .resultsLoaded:
+                centeredMessage(Constants.Title.emptyResultsTitle)
+            case .resultsLoaded(let results):
                 ScrollView {
-                    VerticalListSection(meals: viewModel.results)
+                    VerticalListSection(meals: results)
                         .padding(.bottom, 41)
                 }
+        }
+    }
+
+    private func centeredMessage(_ text: String) -> some View {
+        VStack {
+            Spacer()
+            Text(text)
+            Spacer()
         }
     }
 }

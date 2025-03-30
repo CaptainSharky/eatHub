@@ -23,21 +23,19 @@ final class SearchViewModel: ObservableObject {
     }
 
     @Published var searchText: String = ""
-    @Published var results: [Meal] = []
     @Published var state: State = .idle
 
     private let mealService: MealsServiceInterface
-    private var debouncer: Debouncer?
+    private lazy var debouncer = Debouncer(
+        timeInterval: Constants.debounceInterval,
+        handler: { [weak self] in
+            self?.search()
+        }
+    )
     private var cancellables = Set<AnyCancellable>()
 
     init(mealService: MealsServiceInterface) {
         self.mealService = mealService
-        self.debouncer = Debouncer(
-            timeInterval: Constants.debounceInterval,
-            handler: { [weak self] in
-                self?.search()
-            }
-        )
 
         $searchText
             .receive(on: DispatchQueue.main)
@@ -46,12 +44,12 @@ final class SearchViewModel: ObservableObject {
                     self?.state = .idle
                     return
                 }
-                self?.debouncer?.renewInterval()
+                self?.debouncer.renewInterval()
             }
             .store(in: &cancellables)
     }
 
-    func search() {
+    private func search() {
         state = .idle
         mealService.searchMeal(name: searchText)
             .receive(on: DispatchQueue.main)
@@ -61,7 +59,6 @@ final class SearchViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] meals in
                 let limitedMeals = Array(meals.prefix(Constants.limitCount))
-                self?.results = limitedMeals
                 self?.state = limitedMeals.isEmpty ? .emptyResults : .resultsLoaded(limitedMeals)
             })
             .store(in: &cancellables)
