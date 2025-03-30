@@ -27,3 +27,12 @@ jobs:
         - name: Build
           run: xcodebuild clean build -project EatHub.xcodeproj -scheme EatHub 'platform=iOS Simulator,name=iPhone 16,OS=18.0'
             CODE_SIGNING_ALLOWED=NO
+
+  swiftlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: GitHub Action for SwiftLint with --strict
+        uses: norio-nomura/action-swiftlint@3.2.1
+        with:
+          args: --strict

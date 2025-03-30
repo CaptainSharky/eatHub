@@ -12,7 +12,11 @@ final class MainViewModel: ObservableObject {
     let searchViewModel: SearchViewModel
     let favoriteViewModel: FavoriteViewModel
 
-    init(homeViewModel: HomeViewModel, searchViewModel: SearchViewModel, favoriteViewModel: FavoriteViewModel) {
+    init(
+      homeViewModel: HomeViewModel,
+      searchViewModel: SearchViewModel,
+      favoriteViewModel: FavoriteViewModel
+    ) {
         self.homeViewModel = homeViewModel
         self.searchViewModel = searchViewModel
         self.favoriteViewModel = favoriteViewModel
