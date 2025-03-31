@@ -28,6 +28,8 @@ struct MainView: View {
                     .tag(MainTabEnum.search)
                 FavoriteView(viewModel: dependencies.makeFavoriteViewModel())
                     .tag(MainTabEnum.favorites)
+                RandomView(viewModel: dependencies.makeRandomViewModel())
+                    .tag(MainTabEnum.random)
             }
 
             MainTabBar(selectedIndex: $selectedIndex)

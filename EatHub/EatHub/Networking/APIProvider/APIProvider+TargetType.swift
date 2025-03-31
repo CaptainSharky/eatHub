@@ -58,6 +58,17 @@ extension APIProvider {
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // не кэшируем рандом, чтобы всегда разное приходило
+        switch self {
+            case .randomMeal, .randomSelection:
+                request.cachePolicy = .reloadIgnoringLocalCacheData
+                request.setValue("no-cache", forHTTPHeaderField: "Cache-Control")
+                request.setValue("no-store", forHTTPHeaderField: "Pragma")
+            default:
+                break
+        }
+
         return request
     }
 }

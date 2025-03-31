@@ -19,6 +19,9 @@ struct AppDependencies {
         let favoritesManager = FavoritesManager(store: UserDefaults.standard)
         let mealsService = MealsService(requester: apiRequester)
 
+        let favoritesManager = FavoritesManager()
+        self.favoritesManager = favoritesManager
+
         let detailsViewModelBuilder: ((DetailsViewModuleInput) -> DetailsViewModel) = { input in
             DetailsViewModel(
                 id: input.id,
@@ -44,10 +47,24 @@ struct AppDependencies {
     }
 
     func makeFavoriteViewModel() -> FavoriteViewModel {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
         FavoriteViewModel(
             favoritesManager: favoritesManager,
             mealsService: mealsService,
             detailsViewModelBuilder: detailsViewModelBuilder
         )
+<<<<<<< HEAD
+=======
+        FavoriteViewModel(favoritesManager: FavoritesManager(), mealsService: mealsService)
+>>>>>>> 55ecef7 (#41: добавлен FavoritesManager (#49))
+=======
+>>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
+    }
+
+    func makeRandomViewModel() -> RandomViewModel {
+        RandomViewModel(detailsViewModelBuilder: detailsViewModelBuilder, mealService: mealsService)
     }
 }
