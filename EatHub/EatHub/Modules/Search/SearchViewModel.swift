@@ -25,6 +25,8 @@ final class SearchViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var state: State = .idle
 
+    var detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
+
     private let mealService: MealsServiceInterface
     private lazy var debouncer = Debouncer(
         timeInterval: Constants.debounceInterval,
@@ -34,7 +36,11 @@ final class SearchViewModel: ObservableObject {
     )
     private var cancellables = Set<AnyCancellable>()
 
-    init(mealService: MealsServiceInterface) {
+    init(
+        detailsViewModelBuilder: @escaping ((DetailsViewModuleInput) -> DetailsViewModel),
+        mealService: MealsServiceInterface
+    ) {
+        self.detailsViewModelBuilder = detailsViewModelBuilder
         self.mealService = mealService
 
         $searchText

@@ -11,6 +11,7 @@ struct Meal: Identifiable, Equatable {
     let category: String?
     let instructions: String?
     let thumbnail: String?
+    let area: String?
     let tags: String?
     let youtube: String?
     let ingredients: [Ingredient]

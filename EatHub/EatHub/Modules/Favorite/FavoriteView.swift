@@ -15,26 +15,28 @@ struct FavoriteView: View {
             .navigationBarHidden(true)
         }
     }
+}
 
-    private var favoritesTitle: some View {
+private extension FavoriteView {
+    var favoritesTitle: some View {
         Text(viewModel.title)
             .font(.largeTitle)
             .bold()
             .padding([.horizontal, .top])
     }
 
-    private var favoritesList: some View {
+    var favoritesList: some View {
         LazyVStack(spacing: 8) {
             ForEach(viewModel.recipes) { recipe in
-//              TODO: Добавить переход
-//              NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
-                    RecipeRow(
-                        recipe: recipe,
-                        onToggleFavorite: {
-                            viewModel.toggleFavorite(for: recipe)
-                        }
-                    )
-//              }
+                //              TODO: Добавить переход
+                //              NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
+                RecipeRow(
+                    recipe: recipe,
+                    onToggleFavorite: {
+                        viewModel.toggleFavorite(for: recipe)
+                    }
+                )
+                //              }
                 .buttonStyle(PlainButtonStyle())
             }
         }

@@ -11,8 +11,14 @@ struct SearchView: View {
 
     @ObservedObject var viewModel: SearchViewModel
     @FocusState var isTextFieldFocused: Bool
+    @Namespace private var animationNamespace
+
+    @State private var selectedMeal: Meal?
+    @State private var showDetail: Bool = false
 
     private enum Constants {
+        static let bodySpacing: CGFloat = 16
+
         static let topPadding: CGFloat = 32
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
@@ -24,6 +30,9 @@ struct SearchView: View {
         static let bottomScrollPadding: CGFloat = 41
 
         static let searchBarShadowHeight: CGFloat = 40
+        static let searchListZIndex: Double = 0
+
+        static let detailZIndex: Double = 1
 
         enum Icons {
             static let search: String = "magnifyingglass"
@@ -42,18 +51,31 @@ struct SearchView: View {
             static let darkGray = Color(uiColor: .systemGray)
             static let lightGray = Color(uiColor: .systemGray6)
         }
+
+        static let animationDuration: TimeInterval = 0.5
+        static let detailTransition: AnyTransition = .asymmetric(
+            insertion: .move(edge: .bottom),
+            removal: .move(edge: .bottom)
+        )
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            searchBar
-            bodyView
+        ZStack {
+            VStack(spacing: Constants.bodySpacing) {
+                searchBar
+                bodyView
+            }
+            .frame(maxWidth: .infinity)
+            .zIndex(Constants.searchListZIndex)
+
+            if let meal = selectedMeal, showDetail {
+                openDetailsView(for: meal)
+            }
         }
-        .frame(maxWidth: .infinity)
     }
 }
 
-extension SearchView {
+private extension SearchView {
 
     private var searchBar: some View {
         HStack {
@@ -99,9 +121,17 @@ extension SearchView {
             case .resultsLoaded(let results):
                 ZStack {
                     ScrollView {
-                        VerticalListSection(meals: results)
-                            .id(results.map(\.id).joined())
-                            .padding(.bottom, Constants.bottomScrollPadding)
+                        VerticalListSection(
+                            meals: results,
+                            namespace: animationNamespace
+                        ) { meal in
+                            withAnimation(.easeInOut(duration: Constants.animationDuration)) {
+                                selectedMeal = meal
+                                showDetail = true
+                            }
+                        }
+                        .id(results.map(\.id).joined())
+                        .padding(.bottom, Constants.bottomScrollPadding)
                     }
                     .transition(.opacity)
                     .animation(.easeInOut, value: results)
@@ -134,10 +164,48 @@ extension SearchView {
             Spacer()
         }
     }
+
+    @ViewBuilder
+    func openDetailsView(for meal: Meal) -> some View {
+        let viewModel = viewModel.detailsViewModelBuilder(
+            DetailsViewModuleInput(
+                id: meal.id,
+                name: meal.name,
+                thumbnail: meal.thumbnail
+            )
+        )
+        DetailsView(
+            viewModel: viewModel,
+            onClose: {
+                withAnimation(.easeInOut(duration: Constants.animationDuration)) {
+                    showDetail = false
+                    viewModel.isCloseButtonHidden = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
+                    selectedMeal = nil
+                }
+            },
+            namespace: animationNamespace
+        )
+        .zIndex(Constants.detailZIndex)
+        .transition(Constants.detailTransition)
+    }
 }
 
 #Preview {
     let service = MealsService(requester: APIRequester())
-    let viewModel = SearchViewModel(mealService: service)
-    return SearchView(viewModel: viewModel)
+    let viewModel = SearchViewModel(
+        detailsViewModelBuilder: { input in
+            let requester = APIRequester()
+            let mealsService = MealsService(requester: requester)
+            return DetailsViewModel(
+                id: input.id,
+                name: input.name,
+                thumbnail: input.thumbnail,
+                mealsService: mealsService
+            )
+        },
+        mealService: service
+    )
+    SearchView(viewModel: viewModel)
 }
