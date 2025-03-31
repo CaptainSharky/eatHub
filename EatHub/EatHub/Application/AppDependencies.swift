@@ -8,12 +8,9 @@
 import Foundation
 
 struct AppDependencies {
-    let mealsService: MealsService
 
-    let homeViewModel: HomeViewModel
-    let searchViewModel: SearchViewModel
-    let mainViewModel: MainViewModel
-    let favoriteViewModel: FavoriteViewModel
+    let mealsService: MealsService
+    let detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
 
     init() {
         let apiRequester = APIRequester()
@@ -28,26 +25,18 @@ struct AppDependencies {
                 mealsService: mealsService
             )
         }
+        self.detailsViewModelBuilder = detailsViewModelBuilder
+    }
 
-        let homeViewModel = HomeViewModel(
-            detailsViewModelBuilder: detailsViewModelBuilder,
-            mealsService: mealsService
-        )
-        self.homeViewModel = homeViewModel
+    func makeHomeViewModel() -> HomeViewModel {
+        HomeViewModel(detailsViewModelBuilder: detailsViewModelBuilder, mealsService: mealsService)
+    }
 
-        let searchViewModel = SearchViewModel(
-            detailsViewModelBuilder: detailsViewModelBuilder,
-            mealService: mealsService
-        )
-        self.searchViewModel = searchViewModel
+    func makeSearchViewModel() -> SearchViewModel {
+        SearchViewModel(detailsViewModelBuilder: detailsViewModelBuilder, mealService: mealsService)
+    }
 
-        let favoriteViewModel = FavoriteViewModel()
-        self.favoriteViewModel = favoriteViewModel
-
-        mainViewModel = MainViewModel(
-            homeViewModel: homeViewModel,
-            searchViewModel: searchViewModel,
-            favoriteViewModel: favoriteViewModel
-        )
+    func makeFavoriteViewModel() -> FavoriteViewModel {
+        FavoriteViewModel()
     }
 }

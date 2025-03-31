@@ -9,17 +9,13 @@ import SwiftUI
 
 struct SearchView: View {
 
-    // MARK: - ViewModel
     @ObservedObject var viewModel: SearchViewModel
-
-    // MARK: - UI properties
     @FocusState var isTextFieldFocused: Bool
     @Namespace private var animationNamespace
 
     @State private var selectedMeal: Meal?
     @State private var showDetail: Bool = false
 
-    // MARK: - Constants
     private enum Constants {
         static let bodySpacing: CGFloat = 16
 
@@ -31,7 +27,11 @@ struct SearchView: View {
         static let searchBarIconsPadding: CGFloat = 8
         static let searchBarCornerRadius: CGFloat = 8
 
+        static let bottomScrollPadding: CGFloat = 41
+
+        static let searchBarShadowHeight: CGFloat = 40
         static let searchListZIndex: Double = 0
+
         static let detailZIndex: Double = 1
 
         enum Icons {
@@ -42,9 +42,7 @@ struct SearchView: View {
         // TODO: подумать над тайтлами
         enum Title {
             static let searchBarTitle: String = "Что хотите найти?"
-            static func errorMessage(_ text: String) -> String {
-                "Ошибка: \(text)"
-            }
+            static let errorMessage: String = "Возникла ошибка. Повторите позже"
             static let emptyResultsTitle: String = "Не нашлось рецептов по вашему запросу"
             static let startTitle: String = "Что будем готовить?"
         }
@@ -79,8 +77,7 @@ struct SearchView: View {
 
 private extension SearchView {
 
-    // MARK: - View Elements
-    var searchBar: some View {
+    private var searchBar: some View {
         HStack {
             ZStack {
                 RoundedRectangle(cornerRadius: Constants.searchBarCornerRadius)
@@ -100,7 +97,7 @@ private extension SearchView {
                     Button(action: {
                         viewModel.searchText = ""
                     }, label: {
-                        // TODO: - разобраться почему не сразу стирает, а только после сабмита после нажатия
+                        // TODO: - разобраться почему не сразу стирает
                         Image(systemName: Constants.Icons.clear)
                     })
                     .foregroundColor(Constants.Colors.darkGray)
@@ -113,31 +110,57 @@ private extension SearchView {
     }
 
     @ViewBuilder
-    var bodyView: some View {
-        if let error = viewModel.errorMessage {
-            Spacer()
-            Text(Constants.Title.errorMessage(error))
-            Spacer()
-        } else if viewModel.searchText.isEmpty {
-            Spacer()
-            Text(Constants.Title.startTitle)
-            Spacer()
-        } else if !viewModel.results.isEmpty {
-            ScrollView {
-                VerticalListSection(
-                    meals: viewModel.results,
-                    namespace: animationNamespace
-                ) { meal in
-                    withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                        selectedMeal = meal
-                        showDetail = true
+    private var bodyView: some View {
+        switch viewModel.state {
+            case .idle:
+                centeredMessage(Constants.Title.startTitle)
+            case .error:
+                centeredMessage(Constants.Title.errorMessage)
+            case .emptyResults:
+                centeredMessage(Constants.Title.emptyResultsTitle)
+            case .resultsLoaded(let results):
+                ZStack {
+                    ScrollView {
+                        VerticalListSection(
+                            meals: results,
+                            namespace: animationNamespace
+                        ) { meal in
+                            withAnimation(.easeInOut(duration: Constants.animationDuration)) {
+                                selectedMeal = meal
+                                showDetail = true
+                            }
+                        }
+                        .id(results.map(\.id).joined())
+                        .padding(.bottom, Constants.bottomScrollPadding)
                     }
+                    .transition(.opacity)
+                    .animation(.easeInOut, value: results)
+                    topShadowToBottom
                 }
-                    .padding(.bottom, 41)
-            }
-        } else {
+        }
+    }
+
+    private var topShadowToBottom: some View {
+        VStack {
+            Rectangle()
+                .fill(.clear)
+                .overlay(
+                    LinearGradient(
+                        gradient:
+                            Gradient(colors: [.white, .clear]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(height: Constants.searchBarShadowHeight, alignment: .top)
             Spacer()
-            Text(Constants.Title.emptyResultsTitle)
+        }
+    }
+
+    private func centeredMessage(_ text: String) -> some View {
+        VStack {
+            Spacer()
+            Text(text)
             Spacer()
         }
     }
@@ -168,8 +191,6 @@ private extension SearchView {
         .transition(Constants.detailTransition)
     }
 }
-
-// MARK: - Preview
 
 #Preview {
     let service = MealsService(requester: APIRequester())

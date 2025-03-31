@@ -7,20 +7,20 @@
 
 import Foundation
 
-public typealias Action = () -> Void
+typealias Action = () -> Void
 
-public final class Debouncer {
+final class Debouncer {
 
     // MARK: - Private properties
 
-    private let timeInterval: TimeInterval
-    private var timer: Timer?
+    let timeInterval: TimeInterval
+    var timer: Timer?
 
-    private var handler: Action?
+   var handler: Action?
 
     // MARK: - Init
 
-    public init(
+    init(
         timeInterval: TimeInterval,
         handler: Action?
     ) {
@@ -30,20 +30,18 @@ public final class Debouncer {
 
     // MARK: - Public functions
 
-    public func renewInterval() {
+    func renewInterval() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(
             withTimeInterval: timeInterval,
             repeats: false,
             block: { [weak self] timer in
-                guard let self else { return }
-
-                timeIntervalDidFinish(for: timer)
+                self?.timeIntervalDidFinish(for: timer)
             }
         )
     }
 
-    public func stop() {
+    func stop() {
         timer?.invalidate()
     }
 

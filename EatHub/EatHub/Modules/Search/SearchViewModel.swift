@@ -9,16 +9,31 @@ import SwiftUI
 import Combine
 
 final class SearchViewModel: ObservableObject {
-    @Published var searchText: String = ""
-    @Published var results: [Meal] = []
 
-    // TODO: написать обработчик ошибок (возможно в localizable)
-    @Published var errorMessage: String?
+    private enum Constants {
+        static let debounceInterval: TimeInterval = 1
+        static let limitCount: Int = 15
+    }
+
+    enum State: Equatable {
+        case idle
+        case emptyResults
+        case resultsLoaded([Meal])
+        case error(String)
+    }
+
+    @Published var searchText: String = ""
+    @Published var state: State = .idle
 
     var detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
 
     private let mealService: MealsServiceInterface
-    private var debouncer: Debouncer?
+    private lazy var debouncer = Debouncer(
+        timeInterval: Constants.debounceInterval,
+        handler: { [weak self] in
+            self?.search()
+        }
+    )
     private var cancellables = Set<AnyCancellable>()
 
     init(
@@ -27,35 +42,37 @@ final class SearchViewModel: ObservableObject {
     ) {
         self.detailsViewModelBuilder = detailsViewModelBuilder
         self.mealService = mealService
-        self.debouncer = Debouncer(timeInterval: 1, handler: { [weak self] in
-            self?.search()
-        })
 
         $searchText
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newText in
-                guard !newText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                self?.errorMessage = nil
-                self?.debouncer?.renewInterval()
+                guard !newText.trimmingCharacters(in: .whitespaces).isEmpty else {
+                    self?.state = .idle
+                    return
+                }
+                self?.debouncer.renewInterval()
             }
             .store(in: &cancellables)
     }
 
-    func search() {
-        print("search() запущен с запросом: '\(searchText)'")
+    private func search() {
 
-        errorMessage = nil
+        if searchText.isEmpty {
+            state = .idle
+        }
 
         mealService.searchMeal(name: searchText)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
-                    self?.errorMessage = error.localizedDescription
-                    print("Ошибка при поиске: \(error.localizedDescription)")
+                    self?.state = .error(error.localizedDescription)
                 }
             }, receiveValue: { [weak self] meals in
-                let limitedMeals = Array(meals.prefix(10))
-                self?.results = limitedMeals
+                let limitedMeals = Array(meals.prefix(Constants.limitCount))
+                withAnimation {
+                    self?.state = limitedMeals.isEmpty ? .emptyResults :
+                        .resultsLoaded(limitedMeals)
+                }
             })
             .store(in: &cancellables)
     }

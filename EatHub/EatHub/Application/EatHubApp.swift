@@ -14,7 +14,7 @@ struct EatHubApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainView(viewModel: dependencies.mainViewModel)
+            MainView(dependencies: dependencies)
         }
     }
 }

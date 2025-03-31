@@ -24,6 +24,12 @@ struct VerticalListSection: View {
                 )
                 VerticalItemView(viewModel: viewModel, namespace: namespace)
                     .id(viewModel.id)
+                    .transition(
+                        .asymmetric(
+                            insertion: .move(edge: .top).combined(with: .opacity),
+                            removal: .move(edge: .top).combined(with: .opacity)
+                        )
+                    )
                     .matchedGeometryEffect(
                         id: MatchedGeometryEffectIdentifier(.info, for: meal.id),
                         in: namespace
