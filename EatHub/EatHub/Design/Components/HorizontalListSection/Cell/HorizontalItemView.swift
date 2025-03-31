@@ -18,6 +18,7 @@ struct HorizontalItemView: View {
                         .scaledToFill()
                 } placeholder: {
                     Color.gray.opacity(0.3)
+                        .skeletonable(true)
                 }
                 .frame(width: 150, height: 150)
                 .clipped()

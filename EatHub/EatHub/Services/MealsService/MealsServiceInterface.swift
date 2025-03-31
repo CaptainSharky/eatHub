@@ -11,7 +11,7 @@ protocol MealsServiceInterface: AnyObject {
 
     func searchMeal(name: String) -> AnyPublisher<[Meal], Error>
 
-    func fetchMeal(id: String) -> AnyPublisher<Meal, Error>
+    func fetchMeal(id: String) -> AnyPublisher<Meal?, Error>
 
     func fetchRandomMeal() -> AnyPublisher<Meal, Error>
 

@@ -16,7 +16,7 @@ protocol Requestable: AnyObject {
     /// Получить информацию о блюде по его идентификатору.
     ///
     /// - Parameter id: Идентификатор блюда.
-    func lookupMeal(id: String) -> AnyPublisher<MealItemResponseModel, Error>
+    func lookupMeal(id: String) -> AnyPublisher<MealsResponseModel, Error>
 
     /// Получить случайное блюдо.
     func randomMeal() -> AnyPublisher<MealsResponseModel, Error>

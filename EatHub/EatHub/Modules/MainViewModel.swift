@@ -13,9 +13,9 @@ final class MainViewModel: ObservableObject {
     let favoriteViewModel: FavoriteViewModel
 
     init(
-      homeViewModel: HomeViewModel,
-      searchViewModel: SearchViewModel,
-      favoriteViewModel: FavoriteViewModel
+        homeViewModel: HomeViewModel,
+        searchViewModel: SearchViewModel,
+        favoriteViewModel: FavoriteViewModel
     ) {
         self.homeViewModel = homeViewModel
         self.searchViewModel = searchViewModel
