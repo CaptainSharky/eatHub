@@ -14,7 +14,12 @@ struct EatHubApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainView(dependencies: dependencies)
+            ZStack {
+                MainView(dependencies: dependencies)
+                if dependencies.launchScreenStateManager.state != .finished {
+                    LaunchScreenView(dependencies: dependencies)
+                }
+            }
         }
     }
 }
