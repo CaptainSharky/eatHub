@@ -13,6 +13,9 @@ struct FavoriteView: View {
             }
             .background(Color(.systemGroupedBackground))
             .navigationBarHidden(true)
+            .onAppear {
+                viewModel.refreshFavorites()
+            }
         }
     }
 }
@@ -27,25 +30,20 @@ private extension FavoriteView {
 
     var favoritesList: some View {
         LazyVStack(spacing: 8) {
-            ForEach(viewModel.recipes) { recipe in
-                //              TODO: Добавить переход
-                //              NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
+            ForEach(viewModel.likedRecipes) { recipe in
+                // TODO: Добавить переход
+                // NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
                 RecipeRow(
                     recipe: recipe,
                     onToggleFavorite: {
                         viewModel.toggleFavorite(for: recipe)
                     }
                 )
-                //              }
+                // }
                 .buttonStyle(PlainButtonStyle())
             }
         }
         .padding(.horizontal)
         .padding(.top, 8)
     }
-}
-
-#Preview {
-    let viewModel = FavoriteViewModel()
-    FavoriteView(viewModel: viewModel)
 }

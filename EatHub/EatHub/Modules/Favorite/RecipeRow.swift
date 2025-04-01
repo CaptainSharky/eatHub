@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RecipeRow: View {
-    let recipe: Recipe
+    @ObservedObject var recipe: RecipeViewModel
     let onToggleFavorite: () -> Void
 
     private enum Constants {
@@ -14,12 +14,19 @@ struct RecipeRow: View {
 
     var body: some View {
         HStack {
-            Image(recipe.imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+            if let url = URL(string: recipe.imageName) {
+                CachedAsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    Color.gray.opacity(0.3)
+                        .skeletonable(true)
+                }
                 .frame(width: Constants.imageWidth, height: Constants.imageHeight)
                 .clipped()
                 .cornerRadius(Constants.imageCornerRadius)
+            }
 
             Text(recipe.name)
                 .font(.headline)

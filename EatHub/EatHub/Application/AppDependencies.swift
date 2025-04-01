@@ -39,6 +39,6 @@ struct AppDependencies {
     }
 
     func makeFavoriteViewModel() -> FavoriteViewModel {
-        FavoriteViewModel()
+        FavoriteViewModel(favoritesManager: FavoritesManager(), mealsService: mealsService)
     }
 }

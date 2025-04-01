@@ -38,3 +38,9 @@ extension MealItemResponseModel {
         )
     }
 }
+
+extension Meal {
+    func mapToRecipe() -> RecipeViewModel {
+        RecipeViewModel(id: id, name: name, imageName: thumbnail ?? "MealTemplate")
+    }
+}
