@@ -14,6 +14,35 @@ struct LaunchScreenView: View {
     @State private var secondAnimation = false
     @State private var startFadeoutAnimation = false
 
+    private enum Constants {
+        enum Layout {
+            static let imageSize: CGFloat = 200
+            static let logoWidth: CGFloat = 275
+            static let imageCornerRadius: CGFloat = 40
+            static let imageBlurRadius: CGFloat = 10
+            static let logoVerticalOffset: CGFloat = 50
+        }
+
+        enum Opacity {
+            static let imageStroke: Double = 0.3
+            static let imageBackground: Double = 0.1
+            static let imageFaded: Double = 0.5
+            static let imageFull: Double = 1.0
+        }
+
+        enum Animation {
+            static let imageScaleSmall: CGFloat = 1.9
+            static let imageScaleLarge: CGFloat = 2.5
+            static let fadeOutDuration: TimeInterval = 0.6
+            static let scaleDuration: TimeInterval = 1.5
+            static let timerInterval: TimeInterval = 1.5
+        }
+    }
+
+    private let animationTimer = Timer
+        .publish(every: Constants.Animation.timerInterval, on: .current, in: .common)
+        .autoconnect()
+
     init(dependencies: AppDependencies) {
         self._launchScreenStateManager = ObservedObject(wrappedValue:
                                                             dependencies.launchScreenStateManager)
@@ -22,49 +51,90 @@ struct LaunchScreenView: View {
     var body: some View {
         ZStack {
             backgroundColor
-            image
-        }.onReceive(animationTimer) { _ in
+            content
+        }
+        .onReceive(animationTimer) { _ in
             updateAnimation()
-        }.opacity(startFadeoutAnimation ? 0 : 1)
+        }
+        .opacity(startFadeoutAnimation ? 0 : 1)
     }
 
-    private var image: some View {
-        Image(systemName: "fork.knife.circle.fill")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 120, height: 120)
-            .foregroundStyle(.white)
-            .rotationEffect(firstAnimation ? .degrees(0) : .degrees(360))
-            .scaleEffect(secondAnimation ? 0.1 : 1.0)
-            .offset(y: secondAnimation ? 500 : 0)
-            .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 10)
-            .animation(.easeInOut(duration: 1.3), value: firstAnimation)
-            .animation(.easeIn(duration: 0.6), value: secondAnimation)
-    }
+    private var content: some View {
+        GeometryReader { geometry in
+            let screenWidth = geometry.size.width
+            let screenHeight = geometry.size.height
 
-    private var backgroundColor: some View {
-        LinearGradient(
-            colors: [Color.orange, Color.red],
-            startPoint: .top,
-            endPoint: .bottom
-        )
+            ZStack {
+                Image("LaunchIcon")
+                    .resizable()
+                    .frame(
+                        width: Constants.Layout.imageSize,
+                        height: Constants.Layout.imageSize
+                    )
+                    .clipShape(
+                        RoundedRectangle(
+                        cornerRadius: Constants.Layout.imageCornerRadius,
+                        style: .continuous
+                        )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: Constants.Layout.imageCornerRadius)
+                            .stroke(
+                                Color.white.opacity(
+                                    Constants.Opacity.imageStroke
+                                ),
+                                lineWidth: 2
+                            )
+                    )
+                    .background(
+                        RoundedRectangle(cornerRadius: Constants.Layout.imageCornerRadius)
+                            .fill(Color.white.opacity(Constants.Opacity.imageBackground))
+                            .blur(radius: Constants.Layout.imageBlurRadius)
+                    )
+                    .scaleEffect(
+                        x: firstAnimation ? Constants.Animation.imageScaleLarge :
+                            Constants.Animation.imageScaleSmall,
+                        y: firstAnimation ? Constants.Animation.imageScaleLarge :
+                            Constants.Animation.imageScaleSmall,
+                        anchor: .bottom
+                    )
+                    .opacity(
+                        firstAnimation ? Constants.Opacity.imageFaded :
+                            Constants.Opacity.imageFull
+                    )
+                    .position(x: screenWidth / 2, y: screenHeight - Constants.Layout.imageSize / 2)
+                    .animation(
+                        .easeOut(duration:
+                                    Constants.Animation.scaleDuration),
+                        value: firstAnimation
+                    )
+
+                Image("logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: Constants.Layout.logoWidth)
+                    .position(
+                        x: screenWidth / 2,
+                        y: screenHeight / 2 - Constants.Layout.logoVerticalOffset
+                    )
+            }
+        }
         .ignoresSafeArea()
     }
 
-    private let animationTimer = Timer
-        .publish(every: 1.5, on: .current, in: .common)
-        .autoconnect()
+    private var backgroundColor: some View {
+        Color.white
+            .ignoresSafeArea()
+    }
 
     private func updateAnimation() {
         switch launchScreenStateManager.state {
         case .firstStep:
-            withAnimation(.easeInOut(duration: 0.9)) {
-                firstAnimation.toggle()
-            }
+            firstAnimation = true
         case .secondStep:
-            if secondAnimation == false {
-                withAnimation(.linear) {
-                    secondAnimation = true
+            if !secondAnimation {
+                secondAnimation = true
+                withAnimation(.easeIn(duration: Constants.Animation.fadeOutDuration)) {
                     startFadeoutAnimation = true
                 }
             }
@@ -72,5 +142,4 @@ struct LaunchScreenView: View {
             break
         }
     }
-
 }
