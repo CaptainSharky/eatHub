@@ -16,6 +16,7 @@ struct AppDependencies {
 
     init() {
         let apiRequester = APIRequester()
+        let favoritesManager = FavoritesManager()
         let mealsService = MealsService(requester: apiRequester)
         self.mealsService = mealsService
 
@@ -27,6 +28,7 @@ struct AppDependencies {
                 id: input.id,
                 name: input.name,
                 thumbnail: input.thumbnail,
+                favoritesManager: favoritesManager,
                 mealsService: mealsService
             )
         }

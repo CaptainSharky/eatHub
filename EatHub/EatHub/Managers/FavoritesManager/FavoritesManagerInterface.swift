@@ -6,9 +6,9 @@
 //
 
 protocol FavoritesManagerInterface {
-    func add(recipeID: String)
-    func remove(recipeID: String)
-    func isFavorite(recipeID: String) -> Bool
+    func add(mealID: String)
+    func remove(mealID: String)
+    func isFavorite(mealID: String) -> Bool
     func allFavorites() -> [String]
     func populateInitialFavorites(with ids: [String])
 }

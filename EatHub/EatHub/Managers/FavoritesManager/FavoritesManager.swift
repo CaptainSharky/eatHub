@@ -16,21 +16,21 @@ final class FavoritesManager {
 }
 
 extension FavoritesManager: FavoritesManagerInterface {
-    func add(recipeID: String) {
+    func add(mealID: String) {
         var current = allFavorites()
-        guard !current.contains(recipeID) else { return }
-        current.append(recipeID)
+        guard !current.contains(mealID) else { return }
+        current.append(mealID)
         save(current)
     }
 
-    func remove(recipeID: String) {
+    func remove(mealID: String) {
         var current = allFavorites()
-        current.removeAll { $0 == recipeID }
+        current.removeAll { $0 == mealID }
         save(current)
     }
 
-    func isFavorite(recipeID: String) -> Bool {
-        allFavorites().contains(recipeID)
+    func isFavorite(mealID: String) -> Bool {
+        allFavorites().contains(mealID)
     }
 
     func allFavorites() -> [String] {

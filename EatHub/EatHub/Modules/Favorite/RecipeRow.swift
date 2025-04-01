@@ -10,6 +10,7 @@ struct RecipeRow: View {
         static let imageCornerRadius: CGFloat = 8
         static let heartSize: CGFloat = 22
         static let HStackCornerRadius: CGFloat = 12
+        static let likeSize: CGFloat = 24
     }
 
     var body: some View {
@@ -34,11 +35,19 @@ struct RecipeRow: View {
 
             Spacer()
 
-            Button(action: onToggleFavorite) {
-                Image(systemName: recipe.isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(recipe.isFavorite ? .red : .gray)
-                    .font(.system(size: Constants.heartSize))
-            }
+            LikeButton(
+                viewModel: LikeButtonViewModel(
+                    style: .small,
+                    isLiked: recipe.isFavorite,
+                    onLikeChanged: { _ in
+                        onToggleFavorite()
+                    }
+                )
+            )
+            .frame(
+                width: Constants.likeSize,
+                height: Constants.likeSize
+            )
         }
         .padding()
         .foregroundColor(.primary)

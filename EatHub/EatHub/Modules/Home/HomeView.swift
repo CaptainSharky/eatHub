@@ -91,6 +91,7 @@ private extension HomeView {
 
 #Preview {
     let requester = APIRequester()
+    let favoritesManager = FavoritesManager()
     let mealsService = MealsService(requester: requester)
     let viewModel = HomeViewModel(
         detailsViewModelBuilder: { input in
@@ -100,6 +101,7 @@ private extension HomeView {
                 id: input.id,
                 name: input.name,
                 thumbnail: input.thumbnail,
+                favoritesManager: favoritesManager,
                 mealsService: mealsService
             )
         },
