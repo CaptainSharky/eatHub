@@ -20,7 +20,7 @@ struct MainView: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
             TabView(selection: $selectedIndex) {
                 HomeView(viewModel: dependencies.makeHomeViewModel())
                     .tag(MainTabEnum.home)
@@ -30,11 +30,9 @@ struct MainView: View {
                     .tag(MainTabEnum.favorites)
             }
 
-            VStack(spacing: 0) {
-                Spacer()
-                MainTabBar(selectedIndex: $selectedIndex)
-            }
+            MainTabBar(selectedIndex: $selectedIndex)
         }
+        .ignoresSafeArea(.keyboard)
         .task {
             try? await Task.sleep(for: .seconds(2))
             launchScreenState.dismiss()
