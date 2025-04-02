@@ -13,7 +13,7 @@ struct HorizontalListSection: View {
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
+            HStack(spacing: 10) {
                 ForEach(meals, id: \.id) { meal in
                     HorizontalItemView(meal: meal)
                         .makeTappable {
@@ -22,6 +22,7 @@ struct HorizontalListSection: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.vertical)
         }
     }
 }
