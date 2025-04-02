@@ -17,20 +17,23 @@ struct FavoriteView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                contentView
-                    .background(Color(.systemGroupedBackground))
-                    .onAppear {
-                        viewModel.refreshFavorites()
-                    }
-
-                if let selectedItem, showDetail {
-                    openDetailsView(for: selectedItem)
+        NavigationStack {
+            contentView
+                .background(Color(.systemGroupedBackground))
+                .onAppear {
+                    viewModel.refreshFavorites()
                 }
-            }
-            .navigationBarHidden(true)
         }
+        .navigationDestination(for: RecipeViewModel.self) { recipeViewModel in
+            let input = DetailsViewModuleInput(
+                id: recipeViewModel.id,
+                name: recipeViewModel.name,
+                thumbnail: recipeViewModel.thumbnail
+            )
+            let detailsViewModel = viewModel.detailsViewModelBuilder(input)
+            DetailsView(viewModel: detailsViewModel)
+        }
+        .navigationTitle(viewModel.title)
     }
 }
 
@@ -80,23 +83,20 @@ private extension FavoriteView {
     var favoritesList: some View {
         LazyVStack(spacing: 8) {
             ForEach(viewModel.likedRecipes) { recipeViewModel in
-                RecipeRow(
-                    recipe: recipeViewModel,
-                    onToggleFavorite: {
-                        viewModel.toggleFavorite(for: recipeViewModel)
-                    }
-                )
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                        selectedItem = recipeViewModel
-                        showDetail = true
-                    }
+                NavigationLink(value: recipeViewModel) {
+                    RecipeRow(
+                        recipe: recipeViewModel,
+                        onToggleFavorite: {
+                            viewModel.toggleFavorite(for: recipeViewModel)
+                        }
+                    )
                 }
                 .buttonStyle(PlainButtonStyle())
             }
         }
         .padding(.top, 8)
     }
+
     var emptyPlaceholder: some View {
         VStack(spacing: 16) {
             Image(systemName: "heart")
@@ -113,32 +113,5 @@ private extension FavoriteView {
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .center)
-    }
-
-    @ViewBuilder
-    func openDetailsView(for recipeViewModel: RecipeViewModel) -> some View {
-        let viewModel = viewModel.detailsViewModelBuilder(
-            DetailsViewModuleInput(
-                id: recipeViewModel.id,
-                name: recipeViewModel.name,
-                thumbnail: recipeViewModel.thumbnail
-            )
-        )
-        DetailsView(
-            viewModel: viewModel,
-            onClose: {
-                withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                    showDetail = false
-                    viewModel.isCloseButtonHidden = true
-                    self.viewModel.refreshFavorites()
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
-                    selectedItem = nil
-                }
-            },
-            namespace: animationNamespace
-        )
-        .zIndex(Constants.detailZIndex)
-        .transition(Constants.detailTransition)
     }
 }

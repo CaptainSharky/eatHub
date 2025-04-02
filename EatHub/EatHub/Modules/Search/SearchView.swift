@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct SearchView: View {
-
     @ObservedObject var viewModel: SearchViewModel
-    @FocusState var isTextFieldFocused: Bool
+    @FocusState private var isTextFieldFocused: Bool
     @Namespace private var animationNamespace
 
     @State private var selectedMeal: Meal?
@@ -54,22 +53,22 @@ struct SearchView: View {
     }
 
     var body: some View {
-        ZStack {
+        NavigationStack {
             VStack(spacing: Constants.bodySpacing) {
                 searchBar
                 bodyView
             }
-            .frame(maxWidth: .infinity)
-            .zIndex(Constants.searchListZIndex)
-
-            if let meal = selectedMeal, showDetail {
-                openDetailsView(for: meal)
+            .navigationDestination(for: Meal.self) { meal in
+                let input = DetailsViewModuleInput(
+                    id: meal.id,
+                    name: meal.name,
+                    thumbnail: meal.thumbnail
+                )
+                let detailsViewModel = viewModel.detailsViewModelBuilder(input)
+                DetailsView(viewModel: detailsViewModel)
             }
         }
     }
-}
-
-private extension SearchView {
 
     private var searchBar: some View {
         HStack {
@@ -78,22 +77,22 @@ private extension SearchView {
                     .fill(Constants.Colors.lightGray)
                     .frame(height: Constants.searchBarHeight)
                 HStack(spacing: 0) {
-                    Button(action: {
+                    Button {
                         isTextFieldFocused.toggle()
-                    }, label: {
+                    } label: {
                         Image(systemName: Constants.Icons.search)
-                    })
+                    }
                     .foregroundColor(Constants.Colors.darkGray)
                     .padding(.leading, Constants.searchBarIconsPadding)
                     TextField(Constants.searchBarTitle, text: $viewModel.searchText)
                         .focused($isTextFieldFocused)
                         .frame(height: Constants.searchBarHeight)
-                    Button(action: {
+                    Button {
                         viewModel.searchText = ""
-                    }, label: {
+                    } label: {
                         // TODO: - разобраться почему не сразу стирает
                         Image(systemName: Constants.Icons.clear)
-                    })
+                    }
                     .foregroundColor(Constants.Colors.darkGray)
                     .padding(.trailing, Constants.searchBarIconsPadding)
                 }
@@ -109,68 +108,21 @@ private extension SearchView {
             case .idle, .error, .emptyResults:
                 CenteredVStaskText(text: viewModel.state.title)
             case .resultsLoaded(let results):
-                ZStack {
-                    ScrollView {
-                        VerticalListSection(
-                            meals: results,
-                            namespace: animationNamespace
-                        ) { meal in
-                            withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                                selectedMeal = meal
-                                showDetail = true
-                            }
-                        }
-                        .id(results.map(\.id).joined())
-                        .padding(.bottom, Constants.bottomScrollPadding)
-                    }
-                    .transition(.opacity)
-                    .animation(.easeInOut, value: results)
-                    topShadowToBottom
+                ScrollView {
+                    VerticalListSection(meals: results)
+                        .padding(.bottom, 41)
                 }
+                .transition(.opacity)
+                .animation(.easeInOut, value: results)
         }
     }
 
-    private var topShadowToBottom: some View {
+    private func centeredMessage(_ text: String) -> some View {
         VStack {
-            Rectangle()
-                .fill(.clear)
-                .overlay(
-                    LinearGradient(
-                        gradient:
-                            Gradient(colors: [.white, .clear]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .frame(height: Constants.searchBarShadowHeight, alignment: .top)
+            Spacer()
+            Text(text)
             Spacer()
         }
-    }
-
-    @ViewBuilder
-    func openDetailsView(for meal: Meal) -> some View {
-        let viewModel = viewModel.detailsViewModelBuilder(
-            DetailsViewModuleInput(
-                id: meal.id,
-                name: meal.name,
-                thumbnail: meal.thumbnail
-            )
-        )
-        DetailsView(
-            viewModel: viewModel,
-            onClose: {
-                withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                    showDetail = false
-                    viewModel.isCloseButtonHidden = true
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
-                    selectedMeal = nil
-                }
-            },
-            namespace: animationNamespace
-        )
-        .zIndex(Constants.detailZIndex)
-        .transition(Constants.detailTransition)
     }
 }
 

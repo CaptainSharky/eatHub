@@ -20,7 +20,7 @@ final class DetailsViewModel: ObservableObject {
     @Published var ingredients: [Ingredient]
     @Published var youtubeURL: URL?
 
-    @Published var isCloseButtonHidden: Bool
+    @Published var isBackButtonHidden: Bool
     @Published var isSkeletonable: Bool
 
     var isLiked: Bool {
@@ -53,7 +53,7 @@ final class DetailsViewModel: ObservableObject {
         youtubeURL: URL? = nil,
         favoritesManager: FavoritesManagerInterface,
         mealsService: MealsServiceInterface,
-        isCloseButtonHidden: Bool = false,
+        isBackButtonHidden: Bool = false,
         isSkeletonable: Bool = true
     ) {
         self.id = id
@@ -67,7 +67,7 @@ final class DetailsViewModel: ObservableObject {
         self.youtubeURL = youtubeURL
         self.favoritesManager = favoritesManager
         self.mealsService = mealsService
-        self.isCloseButtonHidden = isCloseButtonHidden
+        self.isBackButtonHidden = isBackButtonHidden
         self.isSkeletonable = isSkeletonable
     }
 

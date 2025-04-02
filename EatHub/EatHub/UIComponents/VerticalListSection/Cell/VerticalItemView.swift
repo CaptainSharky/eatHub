@@ -23,20 +23,10 @@ struct VerticalItemView: View {
     }
 
     @ObservedObject var viewModel: VerticalItemViewModel
-    let namespace: Namespace.ID
-
-    init(viewModel: VerticalItemViewModel, namespace: Namespace.ID) {
-        self.viewModel = viewModel
-        self.namespace = namespace
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: Constants.spacing) {
             makeMealImage()
-                .matchedGeometryEffect(
-                    id: MatchedGeometryEffectIdentifier(.image, for: viewModel.id),
-                    in: namespace
-                )
             infoSection
         }
         .padding(.bottom, Constants.spacing)
@@ -51,10 +41,6 @@ struct VerticalItemView: View {
                 Text(name)
                     .font(.title)
                     .bold()
-                    .matchedGeometryEffect(
-                        id: MatchedGeometryEffectIdentifier(.title, for: viewModel.id),
-                        in: namespace
-                    )
             }
             HStack {
                 makeCategoryIfNeeded()
@@ -101,10 +87,6 @@ struct VerticalItemView: View {
             Label(area, systemImage: Constants.Icons.area)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .matchedGeometryEffect(
-                    id: MatchedGeometryEffectIdentifier(.area, for: viewModel.id),
-                    in: namespace
-                )
         }
     }
 }
