@@ -10,7 +10,7 @@ struct HorizontalItemView: View {
     let meal: Meal
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             if let url = URL(string: meal.thumbnail ?? "") {
                 CachedAsyncImage(url: url) { image in
                     image
@@ -20,26 +20,34 @@ struct HorizontalItemView: View {
                     Color.gray.opacity(0.3)
                         .skeletonable(true)
                 }
-                .frame(width: 150, height: 150)
+                .frame(width: 100, height: 180)
                 .clipped()
-                .cornerRadius(35)
+                .cornerRadius(5)
             }
-            VStack {
-                Spacer()
+
+            ZStack(alignment: .bottom) {
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0.9), Color.clear]),
+                    startPoint: .bottom,
+                    endPoint: .top
+                )
+                .frame(height: 60)
+                .frame(maxWidth: .infinity)
+
                 Text(meal.name)
                     .font(.caption)
+                    .fontWeight(.bold)
                     .foregroundColor(.white)
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
                     .truncationMode(.tail)
-                    .minimumScaleFactor(0.8)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.black.opacity(0.6))
-                    .cornerRadius(8)
-                    .padding(.bottom, 6)
-                    .padding(.horizontal, 6)
+                    .padding(.horizontal, 4)
+                    .padding(.bottom, 8)
             }
-            .frame(width: 150, height: 150)
+            .frame(width: 100, height: 60)
         }
+        .frame(width: 100, height: 180)
+        .cornerRadius(11)
+        .shadow(color: Color.black.opacity(0.5), radius: 4)
     }
 }
