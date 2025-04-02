@@ -10,8 +10,8 @@ final class FavoritesManager {
     private let store: KeyValueStore
     private let favoritesKey = "favorite_recipes_ids"
 
-    init(store: KeyValueStore = UserDefaults.standard) {
-        self.store = store
+    init(store: KeyValueStore?) {
+        self.store = store ?? UserDefaults.standard
     }
 }
 

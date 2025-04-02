@@ -91,7 +91,7 @@ private extension HomeView {
 
 #Preview {
     let requester = APIRequester()
-    let favoritesManager = FavoritesManager()
+    let favoritesManager = FavoritesManager(store: UserDefaults.standard)
     let mealsService = MealsService(requester: requester)
     let viewModel = HomeViewModel(
         detailsViewModelBuilder: { input in

@@ -197,7 +197,7 @@ private extension SearchView {
     let viewModel = SearchViewModel(
         detailsViewModelBuilder: { input in
             let requester = APIRequester()
-            let favoritesManager = FavoritesManager()
+            let favoritesManager = FavoritesManager(store: UserDefaults.standard)
             let mealsService = MealsService(requester: requester)
             return DetailsViewModel(
                 id: input.id,

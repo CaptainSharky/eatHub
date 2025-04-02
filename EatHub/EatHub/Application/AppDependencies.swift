@@ -9,14 +9,14 @@ import Foundation
 
 struct AppDependencies {
 
-    let mealsService: MealsService
+    let mealsService: MealsServiceInterface
     let detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
     let launchScreenStateManager: LaunchScreenStateManager
     let favoritesManager: FavoritesManagerInterface
 
     init() {
         let apiRequester = APIRequester()
-        let favoritesManager = FavoritesManager()
+        let favoritesManager = FavoritesManager(store: UserDefaults.standard)
         let mealsService = MealsService(requester: apiRequester)
         self.mealsService = mealsService
 
@@ -33,6 +33,7 @@ struct AppDependencies {
             )
         }
         self.detailsViewModelBuilder = detailsViewModelBuilder
+        self.favoritesManager = favoritesManager
         self.launchScreenStateManager = LaunchScreenStateManager()
     }
 

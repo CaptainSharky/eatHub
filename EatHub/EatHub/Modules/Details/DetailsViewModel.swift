@@ -51,8 +51,8 @@ final class DetailsViewModel: ObservableObject {
         instructions: String? = nil,
         ingredients: [Ingredient] = [],
         youtubeURL: URL? = nil,
-        favoritesManager: FavoritesManagerInterface?,
-        mealsService: MealsServiceInterface?,
+        favoritesManager: FavoritesManagerInterface,
+        mealsService: MealsServiceInterface,
         isCloseButtonHidden: Bool = false,
         isSkeletonable: Bool = true
     ) {
