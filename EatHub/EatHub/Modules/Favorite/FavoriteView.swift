@@ -129,6 +129,7 @@ private extension FavoriteView {
                 withAnimation(.easeInOut(duration: Constants.animationDuration)) {
                     showDetail = false
                     viewModel.isCloseButtonHidden = true
+                    self.viewModel.refreshFavorites()
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
                     selectedItem = nil
