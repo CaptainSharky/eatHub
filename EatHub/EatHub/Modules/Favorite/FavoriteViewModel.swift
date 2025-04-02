@@ -4,6 +4,7 @@ import Combine
 final class FavoriteViewModel: ObservableObject {
     @Published var likedRecipes: [RecipeViewModel] = []
     var recipesIdentifiers: [String] = []
+    var detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
 
     let title = "Favourites"
 
@@ -11,9 +12,14 @@ final class FavoriteViewModel: ObservableObject {
     private let mealsService: MealsServiceInterface
     private var cancellables = Set<AnyCancellable>()
 
-    init(favoritesManager: FavoritesManagerInterface, mealsService: MealsServiceInterface) {
+    init(
+        favoritesManager: FavoritesManagerInterface,
+        mealsService: MealsServiceInterface,
+        detailsViewModelBuilder: @escaping ((DetailsViewModuleInput) -> DetailsViewModel)
+    ) {
         self.favoritesManager = favoritesManager
         self.mealsService = mealsService
+        self.detailsViewModelBuilder = detailsViewModelBuilder
 
         // убрать
         favoritesManager.populateInitialFavorites(with: ["52943", "52869", "52883", "52823"])

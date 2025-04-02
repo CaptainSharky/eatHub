@@ -12,11 +12,15 @@ struct AppDependencies {
     let mealsService: MealsService
     let detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
     let launchScreenStateManager: LaunchScreenStateManager
+    let favoritesManager: FavoritesManagerInterface
 
     init() {
         let apiRequester = APIRequester()
         let mealsService = MealsService(requester: apiRequester)
         self.mealsService = mealsService
+
+        let favoritesManager = FavoritesManager()
+        self.favoritesManager = favoritesManager
 
         let detailsViewModelBuilder: ((DetailsViewModuleInput) -> DetailsViewModel) = { input in
             DetailsViewModel(
@@ -39,6 +43,10 @@ struct AppDependencies {
     }
 
     func makeFavoriteViewModel() -> FavoriteViewModel {
-        FavoriteViewModel(favoritesManager: FavoritesManager(), mealsService: mealsService)
+        FavoriteViewModel(
+            favoritesManager: favoritesManager,
+            mealsService: mealsService,
+            detailsViewModelBuilder: detailsViewModelBuilder
+        )
     }
 }
