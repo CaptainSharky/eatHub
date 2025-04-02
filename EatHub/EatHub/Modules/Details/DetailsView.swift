@@ -10,7 +10,7 @@ import SwiftUI
 struct DetailsView: View {
     private enum Constants {
         static let chipSpacing: CGFloat = 8
-        static let closeIconSize: CGFloat = 32
+        static let closeButtonSize: CGFloat = 44
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
         static let imageHeight: CGFloat = 200
@@ -19,7 +19,7 @@ struct DetailsView: View {
         enum Icons {
             static let area: String = "globe"
             static let category: String = "square.grid.2x2"
-            static let close: String = "xmark.circle.fill"
+            static let close: String = "xmark"
             static let youtube: String = "play.rectangle.fill"
         }
 
@@ -58,13 +58,17 @@ struct DetailsView: View {
             viewModel.fetchMeal()
         }
         .overlay(
-            makeCloseButton()
-                .padding(.trailing, Constants.spacing)
+            HStack(alignment: .top, spacing: .zero) {
+                makeLikeButton()
+                Spacer()
+                makeCloseButton()
+            }
+                .padding(.horizontal, Constants.spacing)
                 .padding(.top, Constants.spacing)
                 .transaction { transaction in
                     transaction.animation = nil
                 },
-            alignment: .topTrailing
+            alignment: .top
         )
     }
 }
@@ -124,19 +128,34 @@ private extension DetailsView {
     func makeCloseButton() -> some View {
         if !viewModel.isCloseButtonHidden {
             Button(action: { onClose?() }) {
-                Image(systemName: Constants.Icons.close)
-                    .resizable()
-                    .frame(
-                        width: Constants.closeIconSize,
-                        height: Constants.closeIconSize
-                    )
-                    .foregroundColor(.secondary)
-                    .background(Color.white.clipShape(Circle()))
+                ZStack {
+                    Circle()
+                        .fill(Color.black.opacity(0.3))
+                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+
+                    Image(systemName: Constants.Icons.close)
+                        .font(.title)
+                        .symbolVariant(viewModel.isLiked ? .fill : .none)
+                        .padding(12)
+                        .foregroundColor(.white)
+                }
+                .frame(width: Constants.closeButtonSize, height: Constants.closeButtonSize)
             }
         }
     }
 
-    @ViewBuilder
+    func makeLikeButton() -> some View {
+        LikeButton(
+            viewModel: LikeButtonViewModel(
+                style: .large,
+                isLiked: viewModel.isLiked,
+                onLikeChanged: { newValue in
+                    viewModel.updateMealInFavorites(isLiked: newValue)
+                }
+            )
+        )
+    }
+
     func makeInstructionsContent(instructions: String) -> some View {
         VStack(alignment: .leading, spacing: Constants.spacing) {
             Text(Constants.Title.instructions)
@@ -181,6 +200,7 @@ private extension DetailsView {
     @Previewable @Namespace var namespace
     let requester = APIRequester()
     let mealsService = MealsService(requester: requester)
+    let favoritesManager = FavoritesManager(store: UserDefaults.standard)
 
     NavigationView {
         DetailsView(
@@ -206,6 +226,7 @@ private extension DetailsView {
                     Ingredient(name: "Kadilo", measure: "33 pcs")
                 ],
                 youtubeURL: URL(string: "example.com"),
+                favoritesManager: favoritesManager,
                 mealsService: mealsService
             ),
             onClose: nil,

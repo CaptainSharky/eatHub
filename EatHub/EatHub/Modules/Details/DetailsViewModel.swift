@@ -23,6 +23,10 @@ final class DetailsViewModel: ObservableObject {
     @Published var isCloseButtonHidden: Bool
     @Published var isSkeletonable: Bool
 
+    var isLiked: Bool {
+        favoritesManager.isFavorite(mealID: id)
+    }
+
     var verticalItemViewModel: VerticalItemViewModel {
         VerticalItemViewModel(
             id: self.id,
@@ -33,7 +37,8 @@ final class DetailsViewModel: ObservableObject {
         )
     }
 
-    private let mealsService: MealsServiceInterface?
+    private let favoritesManager: FavoritesManagerInterface
+    private let mealsService: MealsServiceInterface
     private var cancellables = Set<AnyCancellable>()
 
     init(
@@ -46,7 +51,8 @@ final class DetailsViewModel: ObservableObject {
         instructions: String? = nil,
         ingredients: [Ingredient] = [],
         youtubeURL: URL? = nil,
-        mealsService: MealsServiceInterface?,
+        favoritesManager: FavoritesManagerInterface,
+        mealsService: MealsServiceInterface,
         isCloseButtonHidden: Bool = false,
         isSkeletonable: Bool = true
     ) {
@@ -59,6 +65,7 @@ final class DetailsViewModel: ObservableObject {
         self.instructions = instructions
         self.ingredients = ingredients
         self.youtubeURL = youtubeURL
+        self.favoritesManager = favoritesManager
         self.mealsService = mealsService
         self.isCloseButtonHidden = isCloseButtonHidden
         self.isSkeletonable = isSkeletonable
@@ -69,7 +76,7 @@ final class DetailsViewModel: ObservableObject {
 
         cancellables.removeAll()
 
-        mealsService?.fetchMeal(id: id)
+        mealsService.fetchMeal(id: id)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { _ in },
@@ -90,6 +97,14 @@ final class DetailsViewModel: ObservableObject {
                 }
             )
             .store(in: &cancellables)
+    }
+
+    func updateMealInFavorites(isLiked: Bool) {
+        if isLiked {
+            favoritesManager.add(mealID: id)
+        } else {
+            favoritesManager.remove(mealID: id)
+        }
     }
 }
 

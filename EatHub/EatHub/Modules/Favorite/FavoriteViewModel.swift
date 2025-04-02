@@ -27,9 +27,9 @@ final class FavoriteViewModel: ObservableObject {
 
     func toggleFavorite(for recipe: RecipeViewModel) {
         if recipe.isFavorite {
-            favoritesManager.remove(recipeID: recipe.id)
+            favoritesManager.remove(mealID: recipe.id)
         } else {
-            favoritesManager.add(recipeID: recipe.id)
+            favoritesManager.add(mealID: recipe.id)
         }
 
         recipe.isFavorite.toggle()
