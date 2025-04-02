@@ -4,6 +4,7 @@ import Combine
 final class FavoriteViewModel: ObservableObject {
     @Published var likedRecipes: [RecipeViewModel] = []
     var recipesIdentifiers: [String] = []
+    var detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
 
     let title = "Favourites"
 
@@ -11,9 +12,14 @@ final class FavoriteViewModel: ObservableObject {
     private let mealsService: MealsServiceInterface
     private var cancellables = Set<AnyCancellable>()
 
-    init(favoritesManager: FavoritesManagerInterface, mealsService: MealsServiceInterface) {
+    init(
+        favoritesManager: FavoritesManagerInterface,
+        mealsService: MealsServiceInterface,
+        detailsViewModelBuilder: @escaping ((DetailsViewModuleInput) -> DetailsViewModel)
+    ) {
         self.favoritesManager = favoritesManager
         self.mealsService = mealsService
+        self.detailsViewModelBuilder = detailsViewModelBuilder
 
         // убрать
         favoritesManager.populateInitialFavorites(with: ["52943", "52869", "52883", "52823"])
@@ -48,11 +54,20 @@ final class FavoriteViewModel: ObservableObject {
         for id in ids {
             mealsService.fetchMeal(id: id)
                 .receive(on: DispatchQueue.main)
-                .sink { _ in } receiveValue: { [weak self] meal in
-                    if let recipe = meal?.mapToRecipe() {
-                        self?.likedRecipes.append(recipe)
+                .sink(
+                    receiveCompletion: { _ in },
+                    receiveValue: { [weak self] meal in
+                        guard let self else { return }
+                        guard let meal else { return }
+
+                        let recipeRowViewModel = RecipeViewModel(
+                            id: meal.id,
+                            name: meal.name,
+                            thumbnail: meal.thumbnail
+                        )
+                        likedRecipes.append(recipeRowViewModel)
                     }
-                }
+                )
                 .store(in: &cancellables)
         }
     }
