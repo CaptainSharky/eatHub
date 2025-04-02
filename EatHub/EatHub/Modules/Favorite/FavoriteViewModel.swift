@@ -54,11 +54,20 @@ final class FavoriteViewModel: ObservableObject {
         for id in ids {
             mealsService.fetchMeal(id: id)
                 .receive(on: DispatchQueue.main)
-                .sink { _ in } receiveValue: { [weak self] meal in
-                    if let recipe = meal?.mapToRecipe() {
-                        self?.likedRecipes.append(recipe)
+                .sink(
+                    receiveCompletion: { _ in },
+                    receiveValue: { [weak self] meal in
+                        guard let self else { return }
+                        guard let meal else { return }
+
+                        let recipeRowViewModel = RecipeViewModel(
+                            id: meal.id,
+                            name: meal.name,
+                            thumbnail: meal.thumbnail
+                        )
+                        likedRecipes.append(recipeRowViewModel)
                     }
-                }
+                )
                 .store(in: &cancellables)
         }
     }

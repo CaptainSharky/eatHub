@@ -2,15 +2,19 @@ import Foundation
 
 class RecipeViewModel: ObservableObject, Identifiable {
     let id: String
-    let meal: Meal
     @Published var name: String
-    @Published var imageName: String
-    @Published var isFavorite: Bool = true
+    @Published var thumbnail: String?
+    @Published var isFavorite: Bool
 
-    init(id: String, meal: Meal) {
+    init(
+        id: String,
+        name: String,
+        thumbnail: String?,
+        isFavorite: Bool = true
+    ) {
         self.id = id
-        self.name = meal.name
-        self.imageName = meal.thumbnail ?? ""
-        self.meal = meal
+        self.name = name
+        self.thumbnail = thumbnail
+        self.isFavorite = isFavorite
     }
 }

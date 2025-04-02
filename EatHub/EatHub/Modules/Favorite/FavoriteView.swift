@@ -2,7 +2,7 @@ import SwiftUI
 
 struct FavoriteView: View {
     @ObservedObject var viewModel: FavoriteViewModel
-    @State private var selectedMeal: Meal?
+    @State private var selectedItem: RecipeViewModel?
     @State private var showDetail: Bool = false
     @Namespace private var animationNamespace
 
@@ -29,8 +29,8 @@ struct FavoriteView: View {
                     viewModel.refreshFavorites()
                 }
 
-                if let meal = selectedMeal, showDetail {
-                    openDetailsView(for: meal)
+                if let selectedItem, showDetail {
+                    openDetailsView(for: selectedItem)
                 }
             }
             .navigationBarHidden(true)
@@ -48,16 +48,16 @@ private extension FavoriteView {
 
     var favoritesList: some View {
         LazyVStack(spacing: 8) {
-            ForEach(viewModel.likedRecipes) { recipe in
+            ForEach(viewModel.likedRecipes) { recipeViewModel in
                 RecipeRow(
-                    recipe: recipe,
+                    recipe: recipeViewModel,
                     onToggleFavorite: {
-                        viewModel.toggleFavorite(for: recipe)
+                        viewModel.toggleFavorite(for: recipeViewModel)
                     }
                 )
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                        selectedMeal = recipe.meal
+                        selectedItem = recipeViewModel
                         showDetail = true
                     }
                 }
@@ -68,12 +68,12 @@ private extension FavoriteView {
     }
 
     @ViewBuilder
-    func openDetailsView(for meal: Meal) -> some View {
+    func openDetailsView(for recipeViewModel: RecipeViewModel) -> some View {
         let viewModel = viewModel.detailsViewModelBuilder(
             DetailsViewModuleInput(
-                id: meal.id,
-                name: meal.name,
-                thumbnail: meal.thumbnail
+                id: recipeViewModel.id,
+                name: recipeViewModel.name,
+                thumbnail: recipeViewModel.thumbnail
             )
         )
         DetailsView(
@@ -84,7 +84,7 @@ private extension FavoriteView {
                     viewModel.isCloseButtonHidden = true
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
-                    selectedMeal = nil
+                    selectedItem = nil
                 }
             },
             namespace: animationNamespace

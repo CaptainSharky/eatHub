@@ -38,9 +38,3 @@ extension MealItemResponseModel {
         )
     }
 }
-
-extension Meal {
-    func mapToRecipe() -> RecipeViewModel {
-        RecipeViewModel(id: id, meal: self)
-    }
-}
