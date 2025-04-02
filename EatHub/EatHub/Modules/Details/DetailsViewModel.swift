@@ -24,7 +24,7 @@ final class DetailsViewModel: ObservableObject {
     @Published var isSkeletonable: Bool
 
     var isLiked: Bool {
-        favoritesManager?.isFavorite(mealID: id) ?? false
+        favoritesManager.isFavorite(mealID: id)
     }
 
     var verticalItemViewModel: VerticalItemViewModel {
@@ -37,8 +37,8 @@ final class DetailsViewModel: ObservableObject {
         )
     }
 
-    private let favoritesManager: FavoritesManagerInterface?
-    private let mealsService: MealsServiceInterface?
+    private let favoritesManager: FavoritesManagerInterface
+    private let mealsService: MealsServiceInterface
     private var cancellables = Set<AnyCancellable>()
 
     init(
@@ -76,7 +76,7 @@ final class DetailsViewModel: ObservableObject {
 
         cancellables.removeAll()
 
-        mealsService?.fetchMeal(id: id)
+        mealsService.fetchMeal(id: id)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { _ in },
@@ -101,9 +101,9 @@ final class DetailsViewModel: ObservableObject {
 
     func updateMealInFavorites(isLiked: Bool) {
         if isLiked {
-            favoritesManager?.add(mealID: id)
+            favoritesManager.add(mealID: id)
         } else {
-            favoritesManager?.remove(mealID: id)
+            favoritesManager.remove(mealID: id)
         }
     }
 }
