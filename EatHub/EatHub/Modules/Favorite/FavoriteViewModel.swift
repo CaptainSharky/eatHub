@@ -20,9 +20,6 @@ final class FavoriteViewModel: ObservableObject {
         self.favoritesManager = favoritesManager
         self.mealsService = mealsService
         self.detailsViewModelBuilder = detailsViewModelBuilder
-
-        // убрать
-        favoritesManager.populateInitialFavorites(with: ["52943", "52869", "52883", "52823"])
     }
 
     func toggleFavorite(for recipe: RecipeViewModel) {
