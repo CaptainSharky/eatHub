@@ -18,3 +18,15 @@ class RecipeViewModel: ObservableObject, Identifiable {
         self.isFavorite = isFavorite
     }
 }
+
+extension RecipeViewModel: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+extension RecipeViewModel: Equatable {
+    static func == (lhs: RecipeViewModel, rhs: RecipeViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+}

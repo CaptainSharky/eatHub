@@ -10,7 +10,7 @@ import SwiftUI
 struct DetailsView: View {
     private enum Constants {
         static let chipSpacing: CGFloat = 8
-        static let closeButtonSize: CGFloat = 44
+        static let backButtonSize: CGFloat = 44
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
         static let imageHeight: CGFloat = 200
@@ -19,7 +19,7 @@ struct DetailsView: View {
         enum Icons {
             static let area: String = "globe"
             static let category: String = "square.grid.2x2"
-            static let close: String = "xmark"
+            static let back: String = "arrow.backward"
             static let youtube: String = "play.rectangle.fill"
         }
 
@@ -31,45 +31,35 @@ struct DetailsView: View {
     }
 
     @ObservedObject var viewModel: DetailsViewModel
-    let onClose: (() -> Void)?
-    let namespace: Namespace.ID
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        Group {
+        ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: Constants.spacing) {
-                    VerticalItemView(
-                        viewModel: viewModel.verticalItemViewModel,
-                        namespace: namespace
-                    )
-                    .matchedGeometryEffect(
-                        id: MatchedGeometryEffectIdentifier(.info, for: viewModel.id),
-                        in: namespace
-                    )
+                    VerticalItemView(viewModel: viewModel.verticalItemViewModel)
                     makeTagsChipsScrollView()
                     ingredientsSection
                     instructionsSection
                 }
+                .background(Color(.systemBackground))
             }
             .ignoresSafeArea(edges: .top)
+            .safeAreaInset(edge: .top) {
+                HStack {
+                    makeBackButton()
+                    Spacer()
+                    makeLikeButton()
+                }
+                .padding(.horizontal, Constants.spacing)
+                .padding(.vertical, Constants.spacing)
+            }
         }
+        .navigationBarHidden(true)
         .background(Color(.systemBackground))
-        .onFirstAppear {
+        .onAppear {
             viewModel.fetchMeal()
         }
-        .overlay(
-            HStack(alignment: .top, spacing: .zero) {
-                makeLikeButton()
-                Spacer()
-                makeCloseButton()
-            }
-                .padding(.horizontal, Constants.spacing)
-                .padding(.top, Constants.spacing)
-                .transaction { transaction in
-                    transaction.animation = nil
-                },
-            alignment: .top
-        )
     }
 }
 
@@ -95,7 +85,6 @@ private extension DetailsView {
                     Text(Constants.Title.ingredients)
                         .font(.headline)
                         .padding(.top)
-
                     ForEach(viewModel.ingredients, id: \.self) { ingredient in
                         HStack {
                             Text(ingredient.name)
@@ -117,6 +106,9 @@ private extension DetailsView {
             if let instructions = viewModel.instructions {
                 VStack {
                     makeInstructionsContent(instructions: instructions)
+                    if let url = viewModel.youtubeURL {
+                        makeYoutubeLink(url: url)
+                    }
                 }
                 .padding(Constants.spacing)
                 .frame(maxWidth: .infinity)
@@ -125,22 +117,26 @@ private extension DetailsView {
     }
 
     @ViewBuilder
-    func makeCloseButton() -> some View {
-        if !viewModel.isCloseButtonHidden {
-            Button(action: { onClose?() }) {
-                ZStack {
-                    Circle()
-                        .fill(Color.black.opacity(0.3))
-                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-
-                    Image(systemName: Constants.Icons.close)
-                        .font(.title)
-                        .symbolVariant(viewModel.isLiked ? .fill : .none)
-                        .padding(12)
-                        .foregroundColor(.white)
-                }
-                .frame(width: Constants.closeButtonSize, height: Constants.closeButtonSize)
+    func makeBackButton() -> some View {
+        Button(action: { dismiss() }) {
+            ZStack {
+                Circle()
+                    .fill(Color.black.opacity(0.3))
+                    .shadow(
+                        color: Color.black.opacity(0.1),
+                        radius: 4,
+                        x: .zero,
+                        y: 2
+                    )
+                Image(systemName: Constants.Icons.back)
+                    .font(.title)
+                    .padding(12)
+                    .foregroundColor(.white)
             }
+            .frame(
+                width: Constants.backButtonSize,
+                height: Constants.backButtonSize
+            )
         }
     }
 
@@ -160,19 +156,13 @@ private extension DetailsView {
         VStack(alignment: .leading, spacing: Constants.spacing) {
             Text(Constants.Title.instructions)
                 .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
+                .frame(alignment: .leading)
             Text(instructions)
                 .font(.body)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            if let url = viewModel.youtubeURL {
-                makeYoutubeLink(url: url)
-            }
+                .frame(alignment: .leading)
         }
         .padding(Constants.spacing)
-        .frame(maxWidth: .infinity)
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(Constants.spacing)
     }
@@ -185,10 +175,9 @@ private extension DetailsView {
                 Text(Constants.Title.youtube)
                     .bold()
             }
-            .frame(maxWidth: .infinity)
             .padding(Constants.spacing)
-            .foregroundColor(.accent)
-            .background(Color.white)
+            .foregroundColor(.white)
+            .background(Color.accentColor)
             .cornerRadius(Constants.spacing)
         }
     }
@@ -197,7 +186,6 @@ private extension DetailsView {
 // MARK: - Preview
 
 #Preview("Meal Details") {
-    @Previewable @Namespace var namespace
     let requester = APIRequester()
     let mealsService = MealsService(requester: requester)
     let favoritesManager = FavoritesManager(store: UserDefaults.standard)
@@ -228,9 +216,7 @@ private extension DetailsView {
                 youtubeURL: URL(string: "example.com"),
                 favoritesManager: favoritesManager,
                 mealsService: mealsService
-            ),
-            onClose: nil,
-            namespace: namespace
+            )
         )
     }
 }

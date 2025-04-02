@@ -17,12 +17,6 @@ struct RandomView: View {
         static let buttonCorberRadius: CGFloat = 12
         static let buttonPaddings: CGFloat = 12
 
-        static let animationDuration: TimeInterval = 0.5
-        static let detailTransition: AnyTransition = .asymmetric(
-            insertion: .move(edge: .bottom),
-            removal: .move(edge: .bottom)
-        )
-
         enum Title {
             static let errorText: String = "Error while fetching random item"
         }
@@ -33,13 +27,11 @@ struct RandomView: View {
     }
 
     @ObservedObject var viewModel: RandomViewModel
-
-    @Namespace private var animationNamespace
     @State private var selectedMeal: Meal?
     @State private var showDetail = false
 
     var body: some View {
-        ZStack {
+        NavigationStack {
             VStack(spacing: 0) {
                 Spacer()
                 bodyView
@@ -70,9 +62,14 @@ struct RandomView: View {
                     viewModel.fetchRandom()
                 }
             }
-
-            if let meal = selectedMeal, showDetail {
-                openDetailsView(for: meal)
+            .navigationDestination(for: Meal.self) { meal in
+                let input = DetailsViewModuleInput(
+                    id: meal.id,
+                    name: meal.name,
+                    thumbnail: meal.thumbnail
+                )
+                let detailsViewModel = viewModel.detailsViewModelBuilder(input)
+                DetailsView(viewModel: detailsViewModel)
             }
         }
     }
@@ -85,43 +82,12 @@ extension RandomView {
             case .loading:
                 RandomItemView()
             case .loaded(let result):
-                RandomItemView(item: result)
-                    .matchedGeometryEffect(id: result.id, in: animationNamespace)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                            selectedMeal = result
-                            showDetail = true
-                        }
-                    }
+                NavigationLink(value: result) {
+                    RandomItemView(item: result)
+                }
             case .error:
                 CenteredVStaskText(text: Constants.Title.errorText)
         }
-    }
-
-    @ViewBuilder
-    func openDetailsView(for meal: Meal) -> some View {
-        let detailsVM = viewModel.detailsViewModelBuilder(
-            DetailsViewModuleInput(
-                id: meal.id,
-                name: meal.name,
-                thumbnail: meal.thumbnail
-            )
-        )
-
-        DetailsView(
-            viewModel: detailsVM,
-            onClose: {
-                withAnimation(.easeInOut(duration: Constants.animationDuration)) {
-                    showDetail = false
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
-                    selectedMeal = nil
-                }
-            },
-            namespace: animationNamespace
-        )
-        .zIndex(1)
-        .transition(Constants.detailTransition)
     }
 }
 
