@@ -2,20 +2,38 @@ import SwiftUI
 
 struct FavoriteView: View {
     @ObservedObject var viewModel: FavoriteViewModel
+    @State private var selectedItem: RecipeViewModel?
+    @State private var showDetail: Bool = false
+    @Namespace private var animationNamespace
+
+    private enum Constants {
+        static let animationDuration: TimeInterval = 0.5
+        static let detailZIndex: Double = 1
+        static let detailTransition: AnyTransition = .asymmetric(
+            insertion: .move(edge: .bottom),
+            removal: .move(edge: .bottom)
+        )
+    }
 
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    favoritesTitle
-                    favoritesList
+            ZStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        favoritesTitle
+                        favoritesList
+                    }
+                }
+                .background(Color(.systemGroupedBackground))
+                .onAppear {
+                    viewModel.refreshFavorites()
+                }
+
+                if let selectedItem, showDetail {
+                    openDetailsView(for: selectedItem)
                 }
             }
-            .background(Color(.systemGroupedBackground))
             .navigationBarHidden(true)
-            .onAppear {
-                viewModel.refreshFavorites()
-            }
         }
     }
 }
@@ -30,20 +48,48 @@ private extension FavoriteView {
 
     var favoritesList: some View {
         LazyVStack(spacing: 8) {
-            ForEach(viewModel.likedRecipes) { recipe in
-                // TODO: Добавить переход
-                // NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
+            ForEach(viewModel.likedRecipes) { recipeViewModel in
                 RecipeRow(
-                    recipe: recipe,
+                    recipe: recipeViewModel,
                     onToggleFavorite: {
-                        viewModel.toggleFavorite(for: recipe)
+                        viewModel.toggleFavorite(for: recipeViewModel)
                     }
                 )
-                // }
-                .buttonStyle(PlainButtonStyle())
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: Constants.animationDuration)) {
+                        selectedItem = recipeViewModel
+                        showDetail = true
+                    }
+                }
             }
         }
         .padding(.horizontal)
         .padding(.top, 8)
+    }
+
+    @ViewBuilder
+    func openDetailsView(for recipeViewModel: RecipeViewModel) -> some View {
+        let viewModel = viewModel.detailsViewModelBuilder(
+            DetailsViewModuleInput(
+                id: recipeViewModel.id,
+                name: recipeViewModel.name,
+                thumbnail: recipeViewModel.thumbnail
+            )
+        )
+        DetailsView(
+            viewModel: viewModel,
+            onClose: {
+                withAnimation(.easeInOut(duration: Constants.animationDuration)) {
+                    showDetail = false
+                    viewModel.isCloseButtonHidden = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
+                    selectedItem = nil
+                }
+            },
+            namespace: animationNamespace
+        )
+        .zIndex(Constants.detailZIndex)
+        .transition(Constants.detailTransition)
     }
 }

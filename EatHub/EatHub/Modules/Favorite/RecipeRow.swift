@@ -14,7 +14,7 @@ struct RecipeRow: View {
 
     var body: some View {
         HStack {
-            if let url = URL(string: recipe.imageName) {
+            if let url = URL(string: recipe.thumbnail ?? "") {
                 CachedAsyncImage(url: url) { image in
                     image
                         .resizable()
