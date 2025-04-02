@@ -13,21 +13,17 @@ struct FavoriteView: View {
             insertion: .move(edge: .bottom),
             removal: .move(edge: .bottom)
         )
+        static let heartSizeWhenEmpty: CGFloat = 64
     }
 
     var body: some View {
         NavigationView {
             ZStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        favoritesTitle
-                        favoritesList
+                contentView
+                    .background(Color(.systemGroupedBackground))
+                    .onAppear {
+                        viewModel.refreshFavorites()
                     }
-                }
-                .background(Color(.systemGroupedBackground))
-                .onAppear {
-                    viewModel.refreshFavorites()
-                }
 
                 if let selectedItem, showDetail {
                     openDetailsView(for: selectedItem)
@@ -39,6 +35,40 @@ struct FavoriteView: View {
 }
 
 private extension FavoriteView {
+    var contentView: some View {
+        Group {
+            if viewModel.likedRecipes.isEmpty {
+                nonScrollableEmptyState
+            } else {
+                scrollableFavoritesList
+            }
+        }
+    }
+
+    var nonScrollableEmptyState: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 0) {
+                favoritesTitle
+                emptyPlaceholder
+                    .padding(.top, 80)
+            }
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .disabled(true)
+        .scrollDisabled(true)
+    }
+
+    var scrollableFavoritesList: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                favoritesTitle
+                favoritesList
+            }
+            .padding(.horizontal)
+        }
+    }
+
     var favoritesTitle: some View {
         Text(viewModel.title)
             .font(.largeTitle)
@@ -63,8 +93,25 @@ private extension FavoriteView {
                 }
             }
         }
-        .padding(.horizontal)
         .padding(.top, 8)
+    }
+
+    var emptyPlaceholder: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "heart")
+                .resizable()
+                .scaledToFit()
+                .frame(
+                    width: Constants.heartSizeWhenEmpty,
+                    height: Constants.heartSizeWhenEmpty
+                )
+                .foregroundColor(.gray)
+
+            Text("Лайкни свой первый рецепт")
+                .font(.headline)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     @ViewBuilder
