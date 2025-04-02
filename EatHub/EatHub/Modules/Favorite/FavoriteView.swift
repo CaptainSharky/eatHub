@@ -46,17 +46,18 @@ private extension FavoriteView {
     }
 
     var nonScrollableEmptyState: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 0) {
-                favoritesTitle
+        VStack(alignment: .leading, spacing: 0) {
+            favoritesTitle
+            Spacer()
+            HStack {
+                Spacer()
                 emptyPlaceholder
-                    .padding(.top, 80)
+                Spacer()
             }
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer()
         }
-        .disabled(true)
-        .scrollDisabled(true)
+        .padding(.horizontal)
+        .background(Color(.systemGroupedBackground))
     }
 
     var scrollableFavoritesList: some View {
