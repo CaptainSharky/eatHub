@@ -11,8 +11,7 @@ import SwiftUI
 
 struct LikeButton: View {
     private enum Constants {
-        static let likedImage: String = "heart.fill"
-        static let defaultImage: String = "heart"
+        static let likeImage: String = "heart"
     }
     @StateObject var viewModel: LikeButtonViewModel
 
@@ -27,11 +26,11 @@ struct LikeButton: View {
                         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                 }
 
-                Image(systemName: viewModel.isLiked ? Constants.likedImage : Constants.defaultImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                Image(systemName: Constants.likeImage)
+                    .font(.title)
+                    .symbolVariant(viewModel.isLiked ? .fill : .none)
                     .padding(viewModel.style.tapPadding)
-                    .foregroundColor(viewModel.isLiked ? .red : viewModel.style.untappedColor)
+                    .foregroundStyle(viewModel.isLiked ? .red : viewModel.style.untappedColor)
                     .scaleEffect(viewModel.animate ? 1.3 : 1.0)
                     .animation(
                         .easeInOut(duration: viewModel.animationDuration),

@@ -134,8 +134,8 @@ private extension DetailsView {
                         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
 
                     Image(systemName: Constants.Icons.close)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .font(.title)
+                        .symbolVariant(viewModel.isLiked ? .fill : .none)
                         .padding(12)
                         .foregroundColor(.white)
                 }
