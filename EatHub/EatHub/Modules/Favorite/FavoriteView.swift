@@ -92,11 +92,11 @@ private extension FavoriteView {
                         showDetail = true
                     }
                 }
+                .buttonStyle(PlainButtonStyle())
             }
         }
         .padding(.top, 8)
     }
-
     var emptyPlaceholder: some View {
         VStack(spacing: 16) {
             Image(systemName: "heart")

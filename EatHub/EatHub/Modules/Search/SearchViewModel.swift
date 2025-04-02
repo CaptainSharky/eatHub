@@ -20,6 +20,19 @@ final class SearchViewModel: ObservableObject {
         case emptyResults
         case resultsLoaded([Meal])
         case error(String)
+
+        var title: String {
+            switch self {
+                case .idle:
+                    "What are we going to cook?"
+                case .emptyResults:
+                    "We couldn't find recipes for your request"
+                case .error:
+                    "Error occured, please try later"
+                default:
+                    ""
+            }
+        }
     }
 
     @Published var searchText: String = ""

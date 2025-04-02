@@ -39,13 +39,7 @@ struct SearchView: View {
             static let clear: String = "xmark.circle.fill"
         }
 
-        // TODO: подумать над тайтлами
-        enum Title {
-            static let searchBarTitle: String = "Что хотите найти?"
-            static let errorMessage: String = "Возникла ошибка. Повторите позже"
-            static let emptyResultsTitle: String = "Не нашлось рецептов по вашему запросу"
-            static let startTitle: String = "Что будем готовить?"
-        }
+        static let searchBarTitle: String = "What do you want?"
 
         enum Colors {
             static let darkGray = Color(uiColor: .systemGray)
@@ -91,7 +85,7 @@ private extension SearchView {
                     })
                     .foregroundColor(Constants.Colors.darkGray)
                     .padding(.leading, Constants.searchBarIconsPadding)
-                    TextField(Constants.Title.searchBarTitle, text: $viewModel.searchText)
+                    TextField(Constants.searchBarTitle, text: $viewModel.searchText)
                         .focused($isTextFieldFocused)
                         .frame(height: Constants.searchBarHeight)
                     Button(action: {
@@ -112,12 +106,8 @@ private extension SearchView {
     @ViewBuilder
     private var bodyView: some View {
         switch viewModel.state {
-            case .idle:
-                centeredMessage(Constants.Title.startTitle)
-            case .error:
-                centeredMessage(Constants.Title.errorMessage)
-            case .emptyResults:
-                centeredMessage(Constants.Title.emptyResultsTitle)
+            case .idle, .error, .emptyResults:
+                CenteredVStaskText(text: viewModel.state.title)
             case .resultsLoaded(let results):
                 ZStack {
                     ScrollView {
@@ -153,14 +143,6 @@ private extension SearchView {
                     )
                 )
                 .frame(height: Constants.searchBarShadowHeight, alignment: .top)
-            Spacer()
-        }
-    }
-
-    private func centeredMessage(_ text: String) -> some View {
-        VStack {
-            Spacer()
-            Text(text)
             Spacer()
         }
     }

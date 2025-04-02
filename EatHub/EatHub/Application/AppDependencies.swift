@@ -50,4 +50,8 @@ struct AppDependencies {
             detailsViewModelBuilder: detailsViewModelBuilder
         )
     }
+
+    func makeRandomViewModel() -> RandomViewModel {
+        RandomViewModel(detailsViewModelBuilder: detailsViewModelBuilder, mealService: mealsService)
+    }
 }
