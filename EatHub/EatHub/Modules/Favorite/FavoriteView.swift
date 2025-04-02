@@ -13,33 +13,17 @@ struct FavoriteView: View {
             insertion: .move(edge: .bottom),
             removal: .move(edge: .bottom)
         )
-<<<<<<< HEAD
         static let heartSizeWhenEmpty: CGFloat = 64
-=======
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
     }
 
     var body: some View {
         NavigationView {
             ZStack {
-<<<<<<< HEAD
                 contentView
                     .background(Color(.systemGroupedBackground))
                     .onAppear {
                         viewModel.refreshFavorites()
                     }
-=======
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        favoritesTitle
-                        favoritesList
-                    }
-                }
-                .background(Color(.systemGroupedBackground))
-                .onAppear {
-                    viewModel.refreshFavorites()
-                }
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
 
                 if let selectedItem, showDetail {
                     openDetailsView(for: selectedItem)
@@ -95,47 +79,24 @@ private extension FavoriteView {
 
     var favoritesList: some View {
         LazyVStack(spacing: 8) {
-<<<<<<< HEAD
-<<<<<<< HEAD
             ForEach(viewModel.likedRecipes) { recipeViewModel in
-=======
-            ForEach(viewModel.likedRecipes) { recipe in
-                // TODO: Добавить переход
-                // NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
->>>>>>> 55ecef7 (#41: добавлен FavoritesManager (#49))
-=======
-            ForEach(viewModel.likedRecipes) { recipeViewModel in
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
                 RecipeRow(
                     recipe: recipeViewModel,
                     onToggleFavorite: {
                         viewModel.toggleFavorite(for: recipeViewModel)
                     }
                 )
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: Constants.animationDuration)) {
                         selectedItem = recipeViewModel
                         showDetail = true
                     }
                 }
-<<<<<<< HEAD
-=======
-                // }
                 .buttonStyle(PlainButtonStyle())
->>>>>>> 55ecef7 (#41: добавлен FavoritesManager (#49))
-=======
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
             }
         }
         .padding(.top, 8)
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-
     var emptyPlaceholder: some View {
         VStack(spacing: 16) {
             Image(systemName: "heart")
@@ -153,8 +114,6 @@ private extension FavoriteView {
         }
         .frame(maxWidth: .infinity, alignment: .center)
     }
-=======
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
 
     @ViewBuilder
     func openDetailsView(for recipeViewModel: RecipeViewModel) -> some View {
@@ -171,10 +130,7 @@ private extension FavoriteView {
                 withAnimation(.easeInOut(duration: Constants.animationDuration)) {
                     showDetail = false
                     viewModel.isCloseButtonHidden = true
-<<<<<<< HEAD
                     self.viewModel.refreshFavorites()
-=======
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + Constants.animationDuration) {
                     selectedItem = nil
@@ -185,9 +141,4 @@ private extension FavoriteView {
         .zIndex(Constants.detailZIndex)
         .transition(Constants.detailTransition)
     }
-<<<<<<< HEAD
-=======
->>>>>>> 55ecef7 (#41: добавлен FavoritesManager (#49))
-=======
->>>>>>> 0f20ce9 (#40: переход на Деталку из Избранного (#68))
 }
