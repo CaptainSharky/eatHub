@@ -10,5 +10,4 @@ protocol FavoritesManagerInterface {
     func remove(mealID: String)
     func isFavorite(mealID: String) -> Bool
     func allFavorites() -> [String]
-    func populateInitialFavorites(with ids: [String])
 }
