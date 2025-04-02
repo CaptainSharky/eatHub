@@ -18,10 +18,6 @@ struct AppDependencies {
         let apiRequester = APIRequester()
         let favoritesManager = FavoritesManager(store: UserDefaults.standard)
         let mealsService = MealsService(requester: apiRequester)
-        self.mealsService = mealsService
-
-        let favoritesManager = FavoritesManager()
-        self.favoritesManager = favoritesManager
 
         let detailsViewModelBuilder: ((DetailsViewModuleInput) -> DetailsViewModel) = { input in
             DetailsViewModel(
@@ -32,8 +28,10 @@ struct AppDependencies {
                 mealsService: mealsService
             )
         }
-        self.detailsViewModelBuilder = detailsViewModelBuilder
+
+        self.mealsService = mealsService
         self.favoritesManager = favoritesManager
+        self.detailsViewModelBuilder = detailsViewModelBuilder
         self.launchScreenStateManager = LaunchScreenStateManager()
     }
 
