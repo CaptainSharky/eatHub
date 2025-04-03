@@ -23,6 +23,8 @@ struct FavoriteView: View {
                 .onAppear {
                     viewModel.refreshFavorites()
                 }
+                .navigationTitle(viewModel.title)
+                .navigationBarTitleDisplayMode(.large)
                 .navigationDestination(for: RecipeViewModel.self) { recipeViewModel in
                     let input = DetailsViewModuleInput(
                         id: recipeViewModel.id,
@@ -33,7 +35,6 @@ struct FavoriteView: View {
                     DetailsView(viewModel: detailsViewModel)
                 }
         }
-        .navigationTitle(viewModel.title)
     }
 }
 
@@ -49,35 +50,21 @@ private extension FavoriteView {
     }
 
     var nonScrollableEmptyState: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            favoritesTitle
-            Spacer()
-            HStack {
+            VStack(alignment: .center) {
                 Spacer()
                 emptyPlaceholder
+                    .padding(.horizontal)
                 Spacer()
             }
-            Spacer()
-        }
-        .padding(.horizontal)
-        .background(Color(.systemGroupedBackground))
     }
 
     var scrollableFavoritesList: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                favoritesTitle
                 favoritesList
             }
             .padding(.horizontal)
         }
-    }
-
-    var favoritesTitle: some View {
-        Text(viewModel.title)
-            .font(.largeTitle)
-            .bold()
-            .padding([.horizontal, .top])
     }
 
     var favoritesList: some View {
