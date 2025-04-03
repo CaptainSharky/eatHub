@@ -56,10 +56,6 @@ extension MainTabBar {
                 .scaleEffect(scaleEffect)
                 .frame(maxWidth: .infinity)
         }
-<<<<<<< HEAD
-        .padding(.top, .large)
-=======
->>>>>>> 6227cc7 (Более яркий блюр у таб бара)
     }
 }
 

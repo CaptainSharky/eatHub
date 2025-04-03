@@ -54,13 +54,9 @@ struct RandomView: View {
                 }
                 .disabled(viewModel.state.isLoading)
             }
-<<<<<<< HEAD
             .padding(.bottom, Constants.bottomPadding)
-            .background(Color.Custom.backgroundPrimary)
-=======
             .navigationTitle(Constants.Title.navBarTitle)
             .ignoreTabBar()
->>>>>>> 27afb2b (ui fixed)
             .onAppear {
                 viewModel.fetchRandom()
             }
@@ -78,6 +74,8 @@ struct RandomView: View {
                 let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                 DetailsView(viewModel: detailsViewModel)
             }
+            .frame(maxWidth: .infinity)
+            .background(Color.Custom.backgroundPrimary)
         }
     }
 }

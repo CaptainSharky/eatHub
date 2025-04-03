@@ -64,6 +64,7 @@ struct SearchView: View {
                 searchBar
                 ZStack {
                     bodyView
+                        .padding(.horizontal, Constants.horizontalPadding)
                     topShadowToBottom
                 }
             }
@@ -77,6 +78,7 @@ struct SearchView: View {
                 let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                 DetailsView(viewModel: detailsViewModel)
             }
+            .background(Color.Custom.backgroundPrimary)
         }
     }
 }
@@ -89,8 +91,7 @@ extension SearchView {
                 .overlay(
                     LinearGradient(
                         gradient:
-                            Gradient(colors:
-                                        [colorScheme == .dark ? .black : .white, .clear]),
+                            Gradient(colors: [Color.Custom.backgroundPrimary, .clear]),
                         startPoint: .top,
                         endPoint: .bottom
                     )
