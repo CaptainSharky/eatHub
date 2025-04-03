@@ -21,7 +21,7 @@ enum MainTabEnum: Int, CaseIterable {
             case .search:
                 "magnifyingglass"
             case .favorites:
-                "star.square.on.square.fill"
+                "star"
             case .random:
                 "shuffle"
         }

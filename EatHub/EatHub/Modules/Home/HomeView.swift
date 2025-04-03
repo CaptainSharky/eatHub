@@ -24,7 +24,7 @@ struct HomeView: View {
                     VerticalListSection(meals: viewModel.verticalMeals)
                         .padding(.horizontal, .large)
                 }
-                .padding(.vertical)
+                .ignoreTabBar()
             }
             .navigationDestination(for: Meal.self) { meal in
                 let input = DetailsViewModuleInput(

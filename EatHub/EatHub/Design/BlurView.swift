@@ -28,7 +28,12 @@ class BlurEffectView: UIVisualEffectView {
 
         frame = superview.bounds
 
-        backgroundColor = .clear
+        switch traitCollection.userInterfaceStyle {
+            case .dark:
+                backgroundColor = UIColor.black.withAlphaComponent(0.7)
+            default:
+                backgroundColor = UIColor.white.withAlphaComponent(0.7)
+        }
 
         setupBlur()
     }

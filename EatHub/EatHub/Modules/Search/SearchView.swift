@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SearchView: View {
+
+    @Environment(\.colorScheme) private var colorScheme
+
     @ObservedObject var viewModel: SearchViewModel
     @FocusState private var isTextFieldFocused: Bool
     @Namespace private var animationNamespace
@@ -16,13 +19,13 @@ struct SearchView: View {
     @State private var showDetail: Bool = false
 
     private enum Constants {
-        static let bodySpacing: CGFloat = 16
+        static let bodySpacing: CGFloat = 8
 
-        static let topPadding: CGFloat = 32
+        static let topPadding: CGFloat = 12
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
 
-        static let searchBarHeight: CGFloat = 36
+        static let searchBarHeight: CGFloat = 24
         static let searchBarIconsPadding: CGFloat = 8
         static let searchBarCornerRadius: CGFloat = 8
 
@@ -33,12 +36,15 @@ struct SearchView: View {
 
         static let detailZIndex: Double = 1
 
+        enum Title {
+            static let navBarTitle = "Search"
+            static let searchTextFieldPlaceholder = "What do you want?"
+        }
+
         enum Icons {
             static let search: String = "magnifyingglass"
             static let clear: String = "xmark.circle.fill"
         }
-
-        static let searchBarTitle: String = "What do you want?"
 
         enum Colors {
             static let darkGray = Color(uiColor: .systemGray)
@@ -56,8 +62,13 @@ struct SearchView: View {
         NavigationStack {
             VStack(spacing: Constants.bodySpacing) {
                 searchBar
-                bodyView
+                ZStack {
+                    bodyView
+                        .padding(.horizontal, Constants.horizontalPadding)
+                    topShadowToBottom
+                }
             }
+            .navigationTitle(Constants.Title.navBarTitle)
             .navigationDestination(for: Meal.self) { meal in
                 let input = DetailsViewModuleInput(
                     id: meal.id,
@@ -67,6 +78,26 @@ struct SearchView: View {
                 let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                 DetailsView(viewModel: detailsViewModel)
             }
+            .background(Color.Custom.backgroundPrimary)
+        }
+    }
+}
+
+extension SearchView {
+    private var topShadowToBottom: some View {
+        VStack {
+            Rectangle()
+                .fill(.clear)
+                .overlay(
+                    LinearGradient(
+                        gradient:
+                            Gradient(colors: [Color.Custom.backgroundPrimary, .clear]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(height: Constants.searchBarShadowHeight, alignment: .top)
+            Spacer()
         }
     }
 
@@ -84,13 +115,15 @@ struct SearchView: View {
                     }
                     .foregroundColor(Constants.Colors.darkGray)
                     .padding(.leading, Constants.searchBarIconsPadding)
-                    TextField(Constants.searchBarTitle, text: $viewModel.searchText)
-                        .focused($isTextFieldFocused)
-                        .frame(height: Constants.searchBarHeight)
+                    TextField(
+                        Constants.Title.searchTextFieldPlaceholder,
+                        text: $viewModel.searchText
+                    )
+                    .focused($isTextFieldFocused)
+                    .frame(height: Constants.searchBarHeight)
                     Button {
                         viewModel.searchText = ""
                     } label: {
-                        // TODO: - разобраться почему не сразу стирает
                         Image(systemName: Constants.Icons.clear)
                     }
                     .foregroundColor(Constants.Colors.darkGray)
@@ -110,7 +143,8 @@ struct SearchView: View {
             case .resultsLoaded(let results):
                 ScrollView {
                     VerticalListSection(meals: results)
-                        .padding(.bottom, 41)
+                        .ignoreTabBar()
+                        .padding(.top, 16)
                 }
                 .transition(.opacity)
                 .animation(.easeInOut, value: results)
