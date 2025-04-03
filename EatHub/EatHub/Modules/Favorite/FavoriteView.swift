@@ -23,15 +23,15 @@ struct FavoriteView: View {
                 .onAppear {
                     viewModel.refreshFavorites()
                 }
-        }
-        .navigationDestination(for: RecipeViewModel.self) { recipeViewModel in
-            let input = DetailsViewModuleInput(
-                id: recipeViewModel.id,
-                name: recipeViewModel.name,
-                thumbnail: recipeViewModel.thumbnail
-            )
-            let detailsViewModel = viewModel.detailsViewModelBuilder(input)
-            DetailsView(viewModel: detailsViewModel)
+                .navigationDestination(for: RecipeViewModel.self) { recipeViewModel in
+                    let input = DetailsViewModuleInput(
+                        id: recipeViewModel.id,
+                        name: recipeViewModel.name,
+                        thumbnail: recipeViewModel.thumbnail
+                    )
+                    let detailsViewModel = viewModel.detailsViewModelBuilder(input)
+                    DetailsView(viewModel: detailsViewModel)
+                }
         }
         .navigationTitle(viewModel.title)
     }

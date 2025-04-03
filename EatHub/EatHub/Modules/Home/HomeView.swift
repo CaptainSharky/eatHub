@@ -28,7 +28,7 @@ struct HomeView: View {
                 let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                 DetailsView(viewModel: detailsViewModel)
             }
-            .onAppear {
+            .onFirstAppear {
                 viewModel.fetchMeals()
             }
         }
