@@ -10,8 +10,9 @@ import SwiftUI
 struct SearchView: View {
 
     @Environment(\.colorScheme) private var colorScheme
+    @EnvironmentObject var tabBarVisibility: TabBarVisibilityManager
 
-    @ObservedObject var viewModel: SearchViewModel
+    @StateObject var viewModel: SearchViewModel
     @FocusState private var isTextFieldFocused: Bool
     @Namespace private var animationNamespace
 
@@ -25,7 +26,7 @@ struct SearchView: View {
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
 
-        static let searchBarHeight: CGFloat = 24
+        static let searchBarHeight: CGFloat = 32
         static let searchBarIconsPadding: CGFloat = 8
         static let searchBarCornerRadius: CGFloat = 8
 
@@ -77,6 +78,7 @@ struct SearchView: View {
                 )
                 let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                 DetailsView(viewModel: detailsViewModel)
+                    .environmentObject(tabBarVisibility)
             }
             .background(Color.Custom.backgroundPrimary)
         }
@@ -105,7 +107,7 @@ extension SearchView {
         HStack {
             ZStack {
                 RoundedRectangle(cornerRadius: Constants.searchBarCornerRadius)
-                    .fill(Constants.Colors.lightGray)
+                    .fill(Color.Custom.backgroundSecondary)
                     .frame(height: Constants.searchBarHeight)
                 HStack(spacing: 0) {
                     Button {

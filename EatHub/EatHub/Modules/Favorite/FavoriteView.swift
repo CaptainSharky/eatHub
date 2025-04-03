@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct FavoriteView: View {
-    @ObservedObject var viewModel: FavoriteViewModel
+    @EnvironmentObject var tabBarVisibility: TabBarVisibilityManager
+    @StateObject var viewModel: FavoriteViewModel
     @State private var selectedItem: RecipeViewModel?
     @State private var showDetail: Bool = false
     @Namespace private var animationNamespace
@@ -33,6 +34,7 @@ struct FavoriteView: View {
                     )
                     let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                     DetailsView(viewModel: detailsViewModel)
+                        .environmentObject(tabBarVisibility)
                 }
         }
     }

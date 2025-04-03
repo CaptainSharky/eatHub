@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @EnvironmentObject var tabBarVisibility: TabBarVisibilityManager
+    @StateObject var viewModel: HomeViewModel
 
     var body: some View {
         NavigationStack {
@@ -36,6 +37,7 @@ struct HomeView: View {
                 )
                 let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                 DetailsView(viewModel: detailsViewModel)
+                    .environmentObject(tabBarVisibility)
             }
             .onFirstAppear {
                 viewModel.fetchMeals()
