@@ -16,8 +16,9 @@ struct MainTabBar: View {
                  tabBarButton(for: tabType)
              }
          }
+        .padding(.vertical, 20)
         .background(
-            BlurView(style: .systemChromeMaterial)
+            BlurView(style: .systemChromeMaterialLight)
                 .edgesIgnoringSafeArea(.all)
         )
         .overlay(alignment: .top) {
@@ -43,7 +44,10 @@ extension MainTabBar {
                 .scaleEffect(scaleEffect)
                 .frame(maxWidth: .infinity)
         }
+<<<<<<< HEAD
         .padding(.top, .large)
+=======
+>>>>>>> 6227cc7 (Более яркий блюр у таб бара)
     }
 }
 

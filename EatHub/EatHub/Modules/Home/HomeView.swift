@@ -24,7 +24,6 @@ struct HomeView: View {
                     VerticalListSection(meals: viewModel.verticalMeals)
                         .padding(.horizontal, .large)
                 }
-                .padding(.vertical)
             }
             .navigationDestination(for: Meal.self) { meal in
                 let input = DetailsViewModuleInput(

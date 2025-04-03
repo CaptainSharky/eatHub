@@ -51,7 +51,7 @@ final class RandomViewModel: ObservableObject {
                     self?.state = .error(error.localizedDescription)
                 }
             }, receiveValue: { [weak self] meal in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                     withAnimation {
                         self?.state = .loaded(meal)
                     }
