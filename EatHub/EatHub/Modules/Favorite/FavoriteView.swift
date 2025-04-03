@@ -19,7 +19,7 @@ struct FavoriteView: View {
     var body: some View {
         NavigationStack {
             contentView
-                .background(Color(.systemGroupedBackground))
+                .background(Color.Custom.backgroundPrimary)
                 .onAppear {
                     viewModel.refreshFavorites()
                 }
@@ -81,7 +81,7 @@ private extension FavoriteView {
                 .buttonStyle(PlainButtonStyle())
             }
         }
-        .padding(.top, 8)
+        .padding(.top, .medium)
     }
 
     var emptyPlaceholder: some View {

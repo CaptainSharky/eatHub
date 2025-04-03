@@ -43,7 +43,7 @@ extension MainTabBar {
                 .scaleEffect(scaleEffect)
                 .frame(maxWidth: .infinity)
         }
-        .padding(.top, 13)
+        .padding(.top, .large)
     }
 }
 

@@ -14,8 +14,15 @@ struct HomeView: View {
         NavigationStack {
             ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: 16) {
+                    Text("Popular")
+                        .font(Font.Custom.headline)
+                        .padding(.horizontal, .large)
                     HorizontalListSection(meals: viewModel.horizontalMeals)
+                    Text("Recent")
+                        .font(Font.Custom.headline)
+                        .padding(.horizontal, .large)
                     VerticalListSection(meals: viewModel.verticalMeals)
+                        .padding(.horizontal, .large)
                 }
                 .padding(.vertical)
             }
@@ -31,6 +38,7 @@ struct HomeView: View {
             .onFirstAppear {
                 viewModel.fetchMeals()
             }
+            .background(Color.Custom.backgroundPrimary)
         }
     }
 }

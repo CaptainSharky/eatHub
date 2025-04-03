@@ -12,7 +12,6 @@ struct Chips: View {
         static let horizontalPadding: CGFloat = 12
         static let verticalPadding: CGFloat = 6
         static let cornerRadius: CGFloat = 12
-        static let font: Font = .caption
     }
 
     @ObservedObject var viewModel: ChipsViewModel
@@ -23,8 +22,7 @@ struct Chips: View {
 
     public var body: some View {
         Text(viewModel.text)
-            .font(Constants.font)
-            .bold()
+            .font(Font.Custom.caption)
             .padding(.horizontal, Constants.horizontalPadding)
             .padding(.vertical, Constants.verticalPadding)
             .background(
