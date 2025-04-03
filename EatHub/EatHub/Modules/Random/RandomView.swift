@@ -18,6 +18,7 @@ struct RandomView: View {
         static let buttonPaddings: CGFloat = 12
 
         enum Title {
+            static let navBarTitle = "Randomizer"
             static let errorText: String = "Error while fetching random item"
         }
 
@@ -53,8 +54,13 @@ struct RandomView: View {
                 }
                 .disabled(viewModel.state.isLoading)
             }
+<<<<<<< HEAD
             .padding(.bottom, Constants.bottomPadding)
             .background(Color.Custom.backgroundPrimary)
+=======
+            .navigationTitle(Constants.Title.navBarTitle)
+            .ignoreTabBar()
+>>>>>>> 27afb2b (ui fixed)
             .onAppear {
                 viewModel.fetchRandom()
             }

@@ -31,7 +31,6 @@ struct MainView: View {
                 RandomView(viewModel: dependencies.makeRandomViewModel())
                     .tag(MainTabEnum.random)
             }
-
             MainTabBar(selectedIndex: $selectedIndex)
         }
         .ignoresSafeArea(.keyboard)

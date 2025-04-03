@@ -63,6 +63,7 @@ private extension FavoriteView {
             VStack(alignment: .leading, spacing: 0) {
                 favoritesList
             }
+            .ignoreTabBar()
             .padding(.horizontal)
         }
     }
