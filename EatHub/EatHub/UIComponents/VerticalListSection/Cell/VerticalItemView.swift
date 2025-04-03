@@ -39,8 +39,7 @@ struct VerticalItemView: View {
         VStack(alignment: .leading, spacing: Constants.spacing) {
             if let name = viewModel.name {
                 Text(name)
-                    .font(.title)
-                    .bold()
+                    .font(.homeMealName)
             }
             HStack {
                 makeCategoryIfNeeded()
