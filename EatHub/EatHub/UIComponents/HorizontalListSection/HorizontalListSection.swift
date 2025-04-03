@@ -14,7 +14,10 @@ struct HorizontalListSection: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
                 ForEach(meals, id: \.id) { meal in
-                    HorizontalItemView(meal: meal)
+                    NavigationLink(value: meal) {
+                        HorizontalItemView(meal: meal)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .padding(.horizontal)

@@ -41,6 +41,7 @@ struct DetailsView: View {
                     ingredientsSection
                     instructionsSection
                 }
+                .ignoreTabBar()
                 .background(Color.Custom.backgroundPrimary)
             }
             .ignoresSafeArea(edges: .top)
@@ -55,7 +56,7 @@ struct DetailsView: View {
             }
         }
         .navigationBarHidden(true)
-        .background(Color(.systemBackground))
+        .background(Color.Custom.backgroundPrimary)
         .onAppear {
             viewModel.fetchMeal()
         }
