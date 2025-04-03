@@ -16,10 +16,12 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Popular")
                         .font(Font.Custom.headline)
+                        .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
                         .padding(.horizontal, .large)
                     HorizontalListSection(meals: viewModel.horizontalMeals)
                     Text("Recent")
                         .font(Font.Custom.headline)
+                        .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
                         .padding(.horizontal, .large)
                     VerticalListSection(meals: viewModel.verticalMeals)
                         .padding(.horizontal, .large)

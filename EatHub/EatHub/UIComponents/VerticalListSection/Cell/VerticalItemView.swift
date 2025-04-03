@@ -31,8 +31,10 @@ struct VerticalItemView: View {
         }
         .padding(.bottom, Constants.spacing)
         .background(Color.Custom.backgroundAccent)
-        .clipped()
+        .shadow(color: Color.black.opacity(0.3), radius: 4, x: 0, y: 2)
         .cornerRadius(Constants.cellCornerRadius, corners: .allCorners)
+        .contentShape(Rectangle())
+        .clipped()
     }
 
     private var infoSection: some View {
