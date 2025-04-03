@@ -15,7 +15,6 @@ enum MainTabEnum: Int, CaseIterable {
 
     var imageName: String {
         switch self {
-            // TODO: - SF Symbols или кастомные добавить когда найдем
             case .home:
                 "frying.pan"
             case .search:
@@ -24,6 +23,15 @@ enum MainTabEnum: Int, CaseIterable {
                 "star"
             case .random:
                 "shuffle"
+        }
+    }
+
+    var animationType: ColorButton.AnimationType {
+        switch self {
+            case .home: return .bell
+            case .search: return .calendar
+            case .favorites: return .plus
+            case .random: return .gear
         }
     }
 }

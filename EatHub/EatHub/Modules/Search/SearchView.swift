@@ -25,7 +25,7 @@ struct SearchView: View {
         static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
 
-        static let searchBarHeight: CGFloat = 24
+        static let searchBarHeight: CGFloat = 32
         static let searchBarIconsPadding: CGFloat = 8
         static let searchBarCornerRadius: CGFloat = 8
 

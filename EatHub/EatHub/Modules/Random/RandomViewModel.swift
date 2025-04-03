@@ -14,18 +14,10 @@ final class RandomViewModel: ObservableObject {
         case loading
         case loaded(Meal)
         case error(String)
-
-        var isLoading: Bool {
-            switch self {
-                case .loading:
-                    true
-                default:
-                    false
-            }
-        }
     }
 
     @Published var state: State = .loading
+    @Published var isLoading = true
 
     let detailsViewModelBuilder: (DetailsViewModuleInput) -> DetailsViewModel
     private let mealService: MealsServiceInterface

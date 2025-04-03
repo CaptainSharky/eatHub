@@ -13,49 +13,68 @@ struct MainTabBar: View {
     @Environment(\.colorScheme) private var colorScheme
     @Binding var selectedIndex: MainTabEnum
 
-    private var color: Color {
-        switch colorScheme {
-            case .dark:
-                return .white
-            default:
-                return .black
+    var body: some View {
+        VStack(spacing: 0) {
+            EdgeTriangles()
+                .fill(Color.Custom.backgroundPrimary)
+                .frame(height: 30)
+            HStack(spacing: 0) {
+                ForEach(Array(MainTabEnum.allCases.enumerated()), id: \.1) { index, tabType in
+                    let isSelected = selectedIndex == tabType
+                    tabBarButton(for: tabType, index: index, isSelected: isSelected)
+                }
+            }
+            .background(
+                Color.Custom.backgroundPrimary
+            )
         }
     }
+}
 
-    var body: some View {
-        HStack(spacing: 0) {
-            ForEach(MainTabEnum.allCases, id: \.self) { tabType in
-                tabBarButton(for: tabType)
-            }
-        }
-        .padding(.vertical, 20)
-        .background(
-            BlurView(style: .systemChromeMaterialLight)
-                .edgesIgnoringSafeArea(.all)
+struct EdgeTriangles: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+
+        let width = rect.width
+        let height = rect.height
+        let triangleSize: CGFloat = 50
+        let arcHeight: CGFloat = 1
+
+        path.move(to: CGPoint(x: 0, y: height))
+        path.addLine(to: CGPoint(x: 0, y: height - triangleSize))
+        path.addQuadCurve(
+            to: CGPoint(x: triangleSize, y: height),
+            control: CGPoint(x: triangleSize * 0.2, y: height - arcHeight)
         )
-        .overlay(alignment: .top) {
-            Divider()
-        }
+        path.closeSubpath()
+
+        path.move(to: CGPoint(x: width, y: height))
+        path.addLine(to: CGPoint(x: width, y: height - triangleSize))
+        path.addQuadCurve(
+            to: CGPoint(x: width - triangleSize, y: height),
+            control: CGPoint(x: width - triangleSize * 0.2, y: height - arcHeight)
+        )
+        path.closeSubpath()
+
+        return path
     }
 }
 
 extension MainTabBar {
     @ViewBuilder
-    private func tabBarButton(for tabType: MainTabEnum) -> some View {
-        let isSelected = selectedIndex == tabType
-        let foregroundColor: Color = isSelected ? .red : color
-        let scaleEffect: CGFloat = isSelected ? 1.4 : 1.0
-
+    private func tabBarButton(for tabType: MainTabEnum, index: Int, isSelected: Bool) -> some View {
         Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.5, blendDuration: 0.5)) {
+            withAnimation {
                 selectedIndex = tabType
             }
         } label: {
-            Image(systemName: tabType.imageName)
-                .foregroundColor(foregroundColor)
-                .scaleEffect(scaleEffect)
-                .frame(maxWidth: .infinity)
+            ColorButton(
+                image: Image(systemName: tabType.imageName),
+                isSelected: isSelected,
+                animationType: tabType.animationType
+            )
         }
+        .frame(maxWidth: .infinity)
     }
 }
 

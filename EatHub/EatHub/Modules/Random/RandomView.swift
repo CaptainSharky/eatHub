@@ -52,7 +52,7 @@ struct RandomView: View {
                             RoundedRectangle(cornerRadius: Constants.buttonCorberRadius)
                         )
                 }
-                .disabled(viewModel.state.isLoading)
+                .disabled(viewModel.isLoading)
             }
             .padding(.bottom, Constants.bottomPadding)
             .navigationTitle(Constants.Title.navBarTitle)
@@ -61,7 +61,7 @@ struct RandomView: View {
                 viewModel.fetchRandom()
             }
             .onShake {
-                if !viewModel.state.isLoading {
+                if !viewModel.isLoading {
                     viewModel.fetchRandom()
                 }
             }
@@ -77,6 +77,9 @@ struct RandomView: View {
             .frame(maxWidth: .infinity)
             .background(Color.Custom.backgroundPrimary)
         }
+        .onChange(of: viewModel.state) { _, newState in
+            viewModel.isLoading = (newState == .loading)
+        }
     }
 }
 
@@ -87,8 +90,13 @@ extension RandomView {
             case .loading:
                 RandomItemView()
             case .loaded(let result):
-                NavigationLink(value: result) {
-                    RandomItemView(item: result)
+                ZStack {
+                    CircleShadow(isLoading: $viewModel.isLoading)
+                        .blur(radius: 20)
+                        .allowsHitTesting(false)
+                    NavigationLink(value: result) {
+                        RandomItemView(item: result)
+                    }
                 }
             case .error:
                 CenteredVStaskText(text: Constants.Title.errorText)
