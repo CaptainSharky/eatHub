@@ -8,15 +8,15 @@ Sirius 2025 mobile project
 
 - Search for recipes from all over the world 🌎 
 - Detailed description and instructions 📝
-- Add recipes to Favorites ❤️
+- Add recipes to Favourites ❤️
 - Popular and recent dishes 🌟
-- An idea for a casual dish 🍽️
+- An idea for a random dish 🍽️
 
 ### Also:
-- Light/dark mode toggle 
-- Live previews
-- Fullscreen mode
-- Cross platform 
+- Light/dark mode 
+- Stunning SwiftUI design
+- Cached images
+- Custom fonts 
 
 ## Getting started
 
