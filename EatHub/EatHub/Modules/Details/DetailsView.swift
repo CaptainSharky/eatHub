@@ -11,10 +11,9 @@ struct DetailsView: View {
     private enum Constants {
         static let chipSpacing: CGFloat = 8
         static let backButtonSize: CGFloat = 44
-        static let horizontalPadding: CGFloat = 16
         static let imageCornerRadius: CGFloat = 24
         static let imageHeight: CGFloat = 200
-        static let spacing: CGFloat = 16
+        static let spacing: CGFloat = Spacing.large.rawValue
 
         enum Icons {
             static let area: String = "globe"
@@ -42,7 +41,7 @@ struct DetailsView: View {
                     ingredientsSection
                     instructionsSection
                 }
-                .background(Color(.systemBackground))
+                .background(Color.Custom.backgroundPrimary)
             }
             .ignoresSafeArea(edges: .top)
             .safeAreaInset(edge: .top) {
@@ -51,8 +50,8 @@ struct DetailsView: View {
                     Spacer()
                     makeLikeButton()
                 }
-                .padding(.horizontal, Constants.spacing)
-                .padding(.vertical, Constants.spacing)
+                .padding(.horizontal, .large)
+                .padding(.vertical, .large)
             }
         }
         .navigationBarHidden(true)
@@ -73,7 +72,7 @@ private extension DetailsView {
                         Chips(viewModel: chip)
                     }
                 }
-                .padding(.horizontal, Constants.horizontalPadding)
+                .padding(.horizontal, .large)
             }
         }
     }
@@ -83,7 +82,7 @@ private extension DetailsView {
             if !viewModel.ingredients.isEmpty {
                 VStack(alignment: .leading, spacing: Constants.spacing) {
                     Text(Constants.Title.ingredients)
-                        .font(.headline)
+                        .font(Font.Custom.title)
                         .padding(.top)
                     ForEach(viewModel.ingredients, id: \.self) { ingredient in
                         HStack {
@@ -96,7 +95,7 @@ private extension DetailsView {
                         }
                     }
                 }
-                .padding(.horizontal, Constants.horizontalPadding)
+                .padding(.horizontal, .large)
             }
         }
     }
@@ -122,15 +121,10 @@ private extension DetailsView {
             ZStack {
                 Circle()
                     .fill(Color.black.opacity(0.3))
-                    .shadow(
-                        color: Color.black.opacity(0.1),
-                        radius: 4,
-                        x: .zero,
-                        y: 2
-                    )
+                    .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                 Image(systemName: Constants.Icons.back)
                     .font(.title)
-                    .padding(12)
+                    .padding(.all, .large)
                     .foregroundColor(.white)
             }
             .frame(
@@ -138,6 +132,7 @@ private extension DetailsView {
                 height: Constants.backButtonSize
             )
         }
+        .frame(width: Constants.backButtonSize, height: Constants.backButtonSize)
     }
 
     func makeLikeButton() -> some View {
@@ -155,14 +150,14 @@ private extension DetailsView {
     func makeInstructionsContent(instructions: String) -> some View {
         VStack(alignment: .leading, spacing: Constants.spacing) {
             Text(Constants.Title.instructions)
-                .font(.headline)
+                .font(Font.Custom.subtitle)
                 .frame(alignment: .leading)
             Text(instructions)
                 .font(.body)
                 .multilineTextAlignment(.leading)
                 .frame(alignment: .leading)
         }
-        .padding(Constants.spacing)
+        .padding(.all, .large)
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(Constants.spacing)
     }
@@ -175,9 +170,9 @@ private extension DetailsView {
                 Text(Constants.Title.youtube)
                     .bold()
             }
-            .padding(Constants.spacing)
+            .padding(.all, .large)
             .foregroundColor(.white)
-            .background(Color.accentColor)
+            .background(Color.Custom.accent)
             .cornerRadius(Constants.spacing)
         }
     }

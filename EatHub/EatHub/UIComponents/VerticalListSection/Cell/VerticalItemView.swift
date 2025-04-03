@@ -30,7 +30,7 @@ struct VerticalItemView: View {
             infoSection
         }
         .padding(.bottom, Constants.spacing)
-        .background(Color.gray.opacity(0.1))
+        .background(Color.Custom.backgroundAccent)
         .clipped()
         .cornerRadius(Constants.cellCornerRadius, corners: .allCorners)
     }
@@ -39,7 +39,7 @@ struct VerticalItemView: View {
         VStack(alignment: .leading, spacing: Constants.spacing) {
             if let name = viewModel.name {
                 Text(name)
-                    .font(.homeMealName)
+                    .font(Font.Custom.title)
             }
             HStack {
                 makeCategoryIfNeeded()
@@ -58,7 +58,7 @@ struct VerticalItemView: View {
                         .resizable()
                         .scaledToFit()
                 } placeholder: {
-                    Color.gray.opacity(0.3)
+                    Color.Custom.backgroundSecondary
                         .skeletonable(true)
                 }
             } else {
@@ -75,7 +75,7 @@ struct VerticalItemView: View {
     private func makeCategoryIfNeeded() -> some View {
         if let category = viewModel.category {
             Label(category, systemImage: Constants.Icons.category)
-                .font(.subheadline)
+                .font(Font.Custom.caption)
                 .foregroundColor(.secondary)
         }
     }
@@ -84,7 +84,7 @@ struct VerticalItemView: View {
     private func makeAreaIfNeeded() -> some View {
         if let area = viewModel.area {
             Label(area, systemImage: Constants.Icons.area)
-                .font(.subheadline)
+                .font(Font.Custom.caption)
                 .foregroundColor(.secondary)
         }
     }

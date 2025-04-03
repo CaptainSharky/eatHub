@@ -17,7 +17,7 @@ struct HorizontalItemView: View {
                         .resizable()
                         .scaledToFill()
                 } placeholder: {
-                    Color.gray.opacity(0.3)
+                    Color.Custom.backgroundSecondary
                         .skeletonable(true)
                 }
                 .frame(width: 100, height: 180)
@@ -35,10 +35,9 @@ struct HorizontalItemView: View {
                 .frame(maxWidth: .infinity)
 
                 Text(meal.name)
-                    .font(.caption)
-                    .fontWeight(.bold)
+                    .font(Font.Custom.caption)
                     .foregroundColor(.white)
-                    .lineLimit(2)
+                    .lineLimit(4)
                     .multilineTextAlignment(.center)
                     .truncationMode(.tail)
                     .padding(.horizontal, 4)
@@ -48,6 +47,6 @@ struct HorizontalItemView: View {
         }
         .frame(width: 100, height: 180)
         .cornerRadius(11)
-        .shadow(color: Color.black.opacity(0.5), radius: 4)
+        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
 }

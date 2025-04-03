@@ -54,6 +54,7 @@ struct RandomView: View {
                 .disabled(viewModel.state.isLoading)
             }
             .padding(.bottom, Constants.bottomPadding)
+            .background(Color.Custom.backgroundPrimary)
             .onAppear {
                 viewModel.fetchRandom()
             }

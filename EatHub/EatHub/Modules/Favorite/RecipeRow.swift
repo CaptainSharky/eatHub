@@ -23,7 +23,7 @@ struct RecipeRow: View {
                         .frame(width: Constants.imageWidth, height: Constants.rowHeight)
                         .clipped()
                 } placeholder: {
-                    Color.gray.opacity(0.3)
+                    Color.Custom.backgroundSecondary
                         .frame(width: Constants.imageWidth, height: Constants.rowHeight)
                         .skeletonable(true)
                 }
@@ -46,8 +46,8 @@ struct RecipeRow: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: Constants.rowHeight)
-        .background(Color(.systemBackground))
+        .background(Color.Custom.backgroundAccent)
         .cornerRadius(Constants.cornerRadius)
-        .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
 }

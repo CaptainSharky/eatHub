@@ -18,7 +18,6 @@ struct HorizontalListSection: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.vertical)
         }
     }
 }

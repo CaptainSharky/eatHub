@@ -20,7 +20,7 @@ public extension View {
                         ]),
                         bandSize: 0.5
                     )
-                    .foregroundColor(Color.secondary)
+                    .foregroundColor(Color.Custom.backgroundSecondary)
             )
         } else {
             AnyView(foregroundColor(.clear))

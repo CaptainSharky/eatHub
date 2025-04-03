@@ -22,12 +22,6 @@ struct VerticalListSection: View {
                         area: meal.area
                     )
                     VerticalItemView(viewModel: viewModel)
-                        .transition(
-                            .asymmetric(
-                                insertion: .move(edge: .top).combined(with: .opacity),
-                                removal: .move(edge: .top).combined(with: .opacity)
-                            )
-                        )
                 }
                 .buttonStyle(PlainButtonStyle())
             }

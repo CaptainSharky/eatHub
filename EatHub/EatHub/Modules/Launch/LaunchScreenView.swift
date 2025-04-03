@@ -80,7 +80,7 @@ struct LaunchScreenView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: Constants.Layout.imageCornerRadius)
                             .stroke(
-                                Color.white.opacity(
+                                Color.Custom.backgroundPrimary.opacity(
                                     Constants.Opacity.imageStroke
                                 ),
                                 lineWidth: 2
@@ -123,7 +123,7 @@ struct LaunchScreenView: View {
     }
 
     private var backgroundColor: some View {
-        Color.white
+        Color.Custom.backgroundPrimary
             .ignoresSafeArea()
     }
 
