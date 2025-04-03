@@ -27,20 +27,14 @@ public struct ColorButton: View {
         ZStack {
             if isSelected || tForBg > 0 {
                 Circle()
-                    .fill(Color.accentColor.opacity(0.3))
+                    .fill(Color.Custom.accent.opacity(0.6))
                     .scaleEffect(tForBg)
                     .frame(width: 40, height: 40)
             }
-            switch animationType {
-                case .bell:
-                    ColorButtonOutlineBell(image: image, t: t)
-                case .plus:
-                    ColorButtonOutlinePlus(image: image, t: t)
-                case .calendar:
-                    ColorButtonOutlineCalendar(image: image, t: t)
-                case .gear:
-                    ColorButtonOutlineGear(image: image, t: t)
-            }
+
+            iconView()
+                .font(.system(size: 20))
+                .foregroundStyle(isSelected ? .textPrimary : Color.Custom.accent)
         }
         .padding(8)
         .onAppear {
@@ -64,10 +58,23 @@ public struct ColorButton: View {
             }
         }
     }
+
+    @ViewBuilder
+    private func iconView() -> some View {
+        switch animationType {
+        case .bell:
+            ColorButtonOutlineBell(image: image, t: t)
+        case .plus:
+            ColorButtonOutlinePlus(image: image, t: t)
+        case .calendar:
+            ColorButtonOutlineCalendar(image: image, t: t, isSelected: isSelected)
+        case .gear:
+            ColorButtonOutlineGear(image: image, t: t)
+        }
+    }
 }
 
 struct ColorButtonOutlineBell: View, Animatable {
-
     var image: Image
     var t: CGFloat
 
@@ -77,35 +84,29 @@ struct ColorButtonOutlineBell: View, Animatable {
     }
 
     var angle: CGFloat {
-        if t < 0.5 {
-            return 2*t * 20
-        }
-        return 2*(1 - t) * 20
+        t < 0.5 ? 2 * t * 20 : 2 * (1 - t) * 20
     }
 
     var body: some View {
         image
-            .rotationEffect(Angle(degrees: angle), anchor: UnitPoint(x: 0.5, y: 0))
-            .font(.system(size: 20))
+            .rotationEffect(Angle(degrees: angle), anchor: .top)
     }
 }
 
 struct ColorButtonOutlinePlus: View {
-
     var image: Image
     var t: CGFloat
 
     var body: some View {
         image
             .rotationEffect(Angle(degrees: t * 90))
-            .font(.system(size: 20))
     }
 }
 
 struct ColorButtonOutlineCalendar: View, Animatable {
-
     var image: Image
     var t: CGFloat
+    var isSelected: Bool
 
     nonisolated var animatableData: CGFloat {
         get { t }
@@ -116,7 +117,6 @@ struct ColorButtonOutlineCalendar: View, Animatable {
         ZStack {
             image
                 .offset(x: calendarOffset(maxValue: 5))
-                .font(.system(size: 20))
             Circle()
                 .frame(width: 3)
                 .offset(x: 3, y: 4)
@@ -131,13 +131,11 @@ struct ColorButtonOutlineCalendar: View, Animatable {
 }
 
 struct ColorButtonOutlineGear: View {
-
     var image: Image
     var t: CGFloat
 
     var body: some View {
         image
             .rotationEffect(Angle(degrees: t * 50))
-            .font(.system(size: 20))
     }
 }

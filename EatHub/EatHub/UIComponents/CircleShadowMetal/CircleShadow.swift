@@ -78,7 +78,10 @@ struct CircleShadow: View {
                         )
                         .blur(radius: 10)
                         .rotationEffect(.degrees(angleTwo))
-                        .animation(.linear(duration: 20).repeatForever(autoreverses: false), value: angleTwo)
+                        .animation(
+                            .linear(duration: 20).repeatForever(autoreverses: false),
+                            value: angleTwo
+                        )
                         .onAppear {
                             angleTwo = -360
                         }

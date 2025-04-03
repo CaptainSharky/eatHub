@@ -27,7 +27,9 @@ struct RandomView: View {
         }
     }
 
-    @ObservedObject var viewModel: RandomViewModel
+    @EnvironmentObject var tabBarVisibility: TabBarVisibilityManager
+
+    @StateObject var viewModel: RandomViewModel
     @State private var selectedMeal: Meal?
     @State private var showDetail = false
 
@@ -73,6 +75,7 @@ struct RandomView: View {
                 )
                 let detailsViewModel = viewModel.detailsViewModelBuilder(input)
                 DetailsView(viewModel: detailsViewModel)
+                    .environmentObject(tabBarVisibility)
             }
             .frame(maxWidth: .infinity)
             .background(Color.Custom.backgroundPrimary)

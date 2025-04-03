@@ -29,7 +29,8 @@ struct DetailsView: View {
         }
     }
 
-    @ObservedObject var viewModel: DetailsViewModel
+    @EnvironmentObject var tabBarVisibility: TabBarVisibilityManager
+    @StateObject var viewModel: DetailsViewModel
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -41,7 +42,6 @@ struct DetailsView: View {
                     ingredientsSection
                     instructionsSection
                 }
-                .background(Color.Custom.backgroundPrimary)
             }
             .ignoresSafeArea(edges: .top)
             .safeAreaInset(edge: .top) {
@@ -53,12 +53,20 @@ struct DetailsView: View {
                 .padding(.horizontal, .large)
                 .padding(.vertical, .large)
             }
+            .background(Color.Custom.backgroundPrimary)
+            .onAppear {
+                viewModel.fetchMeal()
+                withAnimation {
+                    tabBarVisibility.isVisible = false
+                }
+            }
+            .onDisappear {
+                withAnimation {
+                    tabBarVisibility.isVisible = true
+                }
+            }
         }
         .navigationBarHidden(true)
-        .background(Color(.systemBackground))
-        .onAppear {
-            viewModel.fetchMeal()
-        }
     }
 }
 

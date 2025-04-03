@@ -16,7 +16,7 @@ struct MainTabBar: View {
     var body: some View {
         VStack(spacing: 0) {
             EdgeTriangles()
-                .fill(Color.Custom.backgroundPrimary)
+                .fill(Color.tabBarBackground)
                 .frame(height: 30)
             HStack(spacing: 0) {
                 ForEach(Array(MainTabEnum.allCases.enumerated()), id: \.1) { index, tabType in
@@ -25,7 +25,7 @@ struct MainTabBar: View {
                 }
             }
             .background(
-                Color.Custom.backgroundPrimary
+                Color.tabBarBackground
             )
         }
     }

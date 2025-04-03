@@ -9,7 +9,9 @@ import SwiftUI
 
 struct MainView: View {
 
+    @StateObject var tabBarVisibility = TabBarVisibilityManager()
     @State var selectedIndex: MainTabEnum = .home
+
     var dependencies: AppDependencies
     private var launchScreenState: LaunchScreenStateManager
 
@@ -24,14 +26,20 @@ struct MainView: View {
             TabView(selection: $selectedIndex) {
                 HomeView(viewModel: dependencies.makeHomeViewModel())
                     .tag(MainTabEnum.home)
+                    .environmentObject(tabBarVisibility)
                 SearchView(viewModel: dependencies.makeSearchViewModel())
                     .tag(MainTabEnum.search)
+                    .environmentObject(tabBarVisibility)
                 FavoriteView(viewModel: dependencies.makeFavoriteViewModel())
                     .tag(MainTabEnum.favorites)
+                    .environmentObject(tabBarVisibility)
                 RandomView(viewModel: dependencies.makeRandomViewModel())
                     .tag(MainTabEnum.random)
+                    .environmentObject(tabBarVisibility)
             }
+
             MainTabBar(selectedIndex: $selectedIndex)
+                .opacity(tabBarVisibility.isVisible ? 1 : 0)
         }
         .ignoresSafeArea(.keyboard)
         .task {
