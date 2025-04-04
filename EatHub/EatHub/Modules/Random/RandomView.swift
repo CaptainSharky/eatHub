@@ -89,20 +89,21 @@ struct RandomView: View {
 extension RandomView {
     @ViewBuilder
     private var bodyView: some View {
-        switch viewModel.state {
-            case .loading:
-                RandomItemView()
-            case .loaded(let result):
-                ZStack {
-                    CircleShadow(isLoading: $viewModel.isLoading)
-                        .blur(radius: 20)
-                        .allowsHitTesting(false)
+        ZStack {
+            CircleShadow(isLoading: $viewModel.isLoading)
+                .blur(radius: 20)
+                .allowsHitTesting(false)
+            switch viewModel.state {
+                case .loading:
+                    RandomItemView()
+                case .loaded(let result):
+
                     NavigationLink(value: result) {
                         RandomItemView(item: result)
                     }
-                }
-            case .error:
-                CenteredVStaskText(text: Constants.Title.errorText)
+                case .error:
+                    CenteredVStaskText(text: Constants.Title.errorText)
+            }
         }
     }
 }
