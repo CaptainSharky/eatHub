@@ -45,9 +45,16 @@ struct CircleShadow: View {
                         )
                         .foregroundStyle(
                             LinearGradient(
-                                colors: isLoading
-                                ? [.clear, Color.Custom.accent, Color.Custom.accent]
-                                : [.clear, Color.Custom.backgroundAccent.opacity(0.6), .gray.opacity(0.4)],
+                                colors: isLoading ? [
+                                    Color.Custom.accent.opacity(0.2),
+                                    Color.Custom.accent,
+                                    Color.Custom.accent
+                                ]
+                                : [
+                                    Color.Custom.accent.opacity(0.4),
+                                    Color.gray.opacity(0.5),
+                                    Color.Custom.accent.opacity(0.6)
+                                ],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -91,7 +98,9 @@ struct CircleShadow: View {
                 .ignoresSafeArea()
         }
         .onChange(of: isLoading) { _, newValue in
-            rotationSpeed = newValue ? 0.02 : 0.1
+            withAnimation {
+                rotationSpeed = newValue ? 0.05 : 0.1
+            }
         }
     }
 
