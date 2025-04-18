@@ -139,3 +139,9 @@ struct ColorButtonOutlineGear: View {
             .rotationEffect(Angle(degrees: t * 50))
     }
 }
+
+#Preview {
+    CircleShadow(isLoading: .constant(false))
+        .blur(radius: 20)
+        .allowsHitTesting(false)
+}

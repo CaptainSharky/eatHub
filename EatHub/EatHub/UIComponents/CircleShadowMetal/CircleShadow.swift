@@ -27,6 +27,7 @@ struct CircleShadow: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             Rectangle()
+                .fill(Color.Custom.backgroundPrimary)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(
                     TimelineView(.animation()) { timeline in
@@ -34,7 +35,7 @@ struct CircleShadow: View {
 
                         CustomCircle(
                             time: time,
-                            speed: isLoading ? 6 : 3,
+                            speed: 3,
                             smoothing: 40,
                             strength: 15,
                             lineWidth: 30,
@@ -44,9 +45,16 @@ struct CircleShadow: View {
                         )
                         .foregroundStyle(
                             LinearGradient(
-                                colors: isLoading
-                                ? [.clear, .green, .green]
-                                : [.clear, .gray.opacity(0.3), .gray.opacity(0.4)],
+                                colors: isLoading ? [
+                                    Color.Custom.accent.opacity(0.2),
+                                    Color.Custom.accent,
+                                    Color.Custom.accent
+                                ]
+                                : [
+                                    Color.Custom.accent.opacity(0.4),
+                                    Color.gray.opacity(0.5),
+                                    Color.Custom.accent.opacity(0.6)
+                                ],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -59,7 +67,7 @@ struct CircleShadow: View {
 
                         CustomCircle(
                             time: time,
-                            speed: isLoading ? -6 : -2,
+                            speed: -2,
                             smoothing: -40,
                             strength: -30,
                             lineWidth: 30,
@@ -70,8 +78,8 @@ struct CircleShadow: View {
                         .foregroundStyle(
                             LinearGradient(
                                 colors: isLoading
-                                ? [.clear, .green, .green]
-                                : [.clear, .gray.opacity(0.2), .gray.opacity(0.3)],
+                                ? [.clear, Color.Custom.accent, Color.Custom.accent]
+                                : [.clear, Color.Custom.backgroundAccent.opacity(0.3)],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -90,7 +98,9 @@ struct CircleShadow: View {
                 .ignoresSafeArea()
         }
         .onChange(of: isLoading) { _, newValue in
-            rotationSpeed = newValue ? 0.02 : 0.1
+            withAnimation {
+                rotationSpeed = newValue ? 0.05 : 0.1
+            }
         }
     }
 
@@ -131,4 +141,10 @@ struct CustomCircle: View {
                 maxSampleOffset: CGSize(width: 200, height: 200)
             )
     }
+}
+
+#Preview {
+    CircleShadow(isLoading: .constant(false))
+        .blur(radius: 20)
+        .allowsHitTesting(false)
 }
